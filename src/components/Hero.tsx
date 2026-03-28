@@ -97,7 +97,8 @@ export default function Hero() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="border border-white hover:border-primary hover:text-primary text-white px-8 py-4 rounded-md font-bold transition-all bg-transparent flex items-center justify-center gap-2 flex-1 md:flex-none"
-              href="#"
+              href="/resume.pdf"
+              download="P_Rahul_Reddy_Resume.pdf"
             >
               Download Resume
               <FileText className="w-5 h-5" />

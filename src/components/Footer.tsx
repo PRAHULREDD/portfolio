@@ -6,7 +6,7 @@ export default function Footer() {
           P. Rahul Reddy
         </div>
         <div className="text-sm text-slate-500 text-center md:text-left font-body">
-          P. Rahul Reddy · Edge AI & Computer Vision Engineer · Built with React + Vite · 2025
+          P. Rahul Reddy · Edge AI & Computer Vision Engineer · Built with React + Vite · 2026
         </div>
         <div className="flex gap-8">
           <a className="text-slate-500 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest" href="https://linkedin.com/in/rahulreddypulicharla" target="_blank" rel="noopener noreferrer">LinkedIn</a>

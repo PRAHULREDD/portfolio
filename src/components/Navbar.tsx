@@ -82,7 +82,8 @@ export default function Navbar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-primary text-black px-5 py-2 rounded-md font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all"
-            href="#"
+            href="/resume.pdf"
+            download="P_Rahul_Reddy_Resume.pdf"
           >
             Resume
           </motion.a>
@@ -121,7 +122,8 @@ export default function Navbar() {
               ))}
               <a
                 className="bg-primary text-black px-5 py-3 rounded-md font-bold text-center uppercase tracking-widest"
-                href="#"
+                href="/resume.pdf"
+                download="P_Rahul_Reddy_Resume.pdf"
                 onClick={() => setIsOpen(false)}
               >
                 Resume
