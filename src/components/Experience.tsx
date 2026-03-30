@@ -24,8 +24,7 @@ export default function Experience() {
       tags: ['Python', 'YOLO', 'FaceNet', 'SCRFD', 'ONNX', 'Hailo-8L', 'Raspberry Pi 5', 'OpenCV', 'WebSocket'],
       metrics: [
         { label: '93% Face Recog. Accuracy' },
-        { label: '+25pp Improvement' },
-        { label: '64 Days Attended' }
+        { label: '+25pp Improvement' }
       ],
       bullets: [
         'Engineered real-time multi-stage face recognition system (SCRFD + ONNX FaceNet), achieving 93% accuracy at 6-metre operational range.',
@@ -92,7 +91,7 @@ export default function Experience() {
                     <div>
                       <h3 className="text-xl font-bold text-white font-headline">{exp.company}</h3>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded border border-primary/20">
+                        <span className="px-2.5 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest rounded border border-primary/20">
                           {exp.role}
                         </span>
                       </div>
@@ -106,7 +105,7 @@ export default function Experience() {
 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {exp.tags.map((tag, i) => (
-                    <span key={i} className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">
+                    <span key={i} className="text-xs font-mono text-slate-500 uppercase tracking-wider bg-slate-800/50 px-2 py-1 rounded">
                       {tag}
                     </span>
                   ))}

@@ -41,7 +41,7 @@ export default function Contact() {
               <div className="w-14 h-14 rounded-full border border-slate-700 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary transition-all">
                 <Github className="w-6 h-6 text-slate-400 group-hover:text-primary" />
               </div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">GitHub</span>
+              <span className="text-xs font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">GitHub</span>
             </motion.a>
             <motion.a 
               whileHover={{ y: -5 }}
@@ -53,7 +53,7 @@ export default function Contact() {
               <div className="w-14 h-14 rounded-full border border-slate-700 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary transition-all">
                 <Linkedin className="w-6 h-6 text-slate-400 group-hover:text-primary" />
               </div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">LinkedIn</span>
+              <span className="text-xs font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">LinkedIn</span>
             </motion.a>
             <motion.a 
               whileHover={{ y: -5 }}
@@ -65,7 +65,7 @@ export default function Contact() {
               <div className="w-14 h-14 rounded-full border border-slate-700 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary transition-all">
                 <Code2 className="w-6 h-6 text-slate-400 group-hover:text-primary" />
               </div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">LeetCode</span>
+              <span className="text-xs font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">LeetCode</span>
             </motion.a>
           </div>
         </motion.div>

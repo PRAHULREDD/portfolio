@@ -35,7 +35,7 @@ export default function EducationCertifications() {
                 </div>
                 <div className="text-center md:text-right">
                   <div className="text-4xl font-bold text-white font-headline">8.5 <span className="text-lg text-slate-500">/ 10</span></div>
-                  <div className="text-[10px] uppercase tracking-widest text-primary font-bold mt-1">Current CGPA</div>
+                  <div className="text-xs uppercase tracking-widest text-primary font-bold mt-1">Current CGPA</div>
                 </div>
               </div>
             </div>
@@ -60,7 +60,7 @@ export default function EducationCertifications() {
                 </div>
                 <h4 className="font-bold text-white text-sm mb-2 leading-tight">NPTEL — Introduction to Internet of Things (IoT)</h4>
                 <p className="text-xs text-slate-500 mb-4">Jan – Apr 2025</p>
-                <div className="inline-block px-2 py-1 bg-slate-900 rounded text-[10px] font-bold text-primary border border-primary/20">
+                <div className="inline-block px-2.5 py-1 bg-slate-900 rounded text-xs font-bold text-primary border border-primary/20">
                   IIT / NPTEL Badge
                 </div>
               </div>
@@ -71,8 +71,8 @@ export default function EducationCertifications() {
                 </div>
                 <h4 className="font-bold text-white text-sm mb-2 leading-tight">Internship Completion Certificate</h4>
                 <p className="text-xs text-slate-500 mb-1">Pipra Solutions Pvt. Ltd.</p>
-                <p className="text-[10px] text-slate-400 mb-3">AI/ML Intern · Oct 2025</p>
-                <div className="inline-block px-2 py-1 bg-primary/20 rounded text-[10px] font-bold text-primary border border-primary/20">
+                <p className="text-xs text-slate-400 mb-3">AI/ML Intern · Oct 2025</p>
+                <div className="inline-block px-2.5 py-1 bg-primary/20 rounded text-xs font-bold text-primary border border-primary/20">
                   Remark: Outstanding
                 </div>
               </div>

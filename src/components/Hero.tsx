@@ -48,7 +48,7 @@ export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
             </span>
-            Seeking Full-Time Roles · Open to Relocation
+            <span className="text-sm">Seeking Full-Time Roles  · Open to Relocation</span>
           </div>
           
           <div className="space-y-4 w-full">
@@ -113,7 +113,7 @@ export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
               <motion.a
                 key={index}
                 whileHover={{ scale: 1.2, color: '#22C55E' }}
-                className="text-slate-400 transition-colors"
+                className="text-slate-400 transition-colors p-2 -m-2"
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"

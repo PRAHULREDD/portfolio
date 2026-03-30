@@ -4,7 +4,7 @@ export default function About() {
   const stats = [
     { value: '93%', label: 'Face Recog Accuracy' },
     { value: '98.7%', label: 'Fraud Detection' },
-    { value: '5 Mo.', label: 'Industry Experience' },
+    { value: '2', label: 'Internships Completed' },
   ];
 
   return (
