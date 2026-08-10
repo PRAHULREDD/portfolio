@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://prahulredd.github.io/Portfolio/sitemap.xml
