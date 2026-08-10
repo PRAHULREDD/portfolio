@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import Tilt from 'react-parallax-tilt';
-import { Database, Cpu, Activity, TrendingUp } from 'lucide-react';
+import { Database, Cpu, Activity, TrendingUp, CheckCircle2, Download } from 'lucide-react';
+import { CertificateModal, CertificateData } from './CertificateComponents';
 
 export default function Experience() {
+  const [activeCert, setActiveCert] = useState<CertificateData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const experiences = [
     {
       company: 'RealMeds Technologies Pvt. Ltd.',
@@ -12,10 +17,20 @@ export default function Experience() {
       duration: 'Oct 2025 – Dec 2025 · 2 months · Thiruvananthapuram, Kerala',
       tags: ['Python', 'Pandas', 'NumPy', 'Machine Learning', 'Healthcare AI', 'EDA'],
       bullets: [
-        'Developed AI-driven features for a healthcare platform using Python, Pandas, and NumPy within an agile workflow.',
-        'Collaborated with cross-functional teams to integrate ML models into the RealMeds product pipeline, ensuring compatibility with healthcare data standards.',
-        'Conducted exploratory data analysis (EDA) and standardised dataset pipeline, reducing preprocessing time and improving data quality for model training.'
-      ]
+        'Engineered data preprocessing modules using Python, Pandas, and NumPy, optimizing data preparation workflows for medical machine learning pipelines.',
+        'Collaborated with cross-functional healthcare engineering teams to integrate machine learning models into the RealMeds production system, ensuring compliance with medical data standards.',
+        'Conducted exploratory data analysis (EDA) and standardized the dataset loading pipeline, reducing preprocessing latencies and improving data quality for model training.'
+      ],
+      certificate: {
+        title: "Internship Completion Certificate — RealMeds Technologies",
+        issuer: "RealMeds Technologies Pvt. Ltd.",
+        date: "Oct – Dec 2025",
+        previewUrl: `${import.meta.env.BASE_URL}certifications/Realmeds Internship.png`,
+        pdfUrl: `${import.meta.env.BASE_URL}certifications/Realmeds Internship.pdf`,
+        verifyUrl: "https://www.realmeds.in",
+        description: "Awarded for successfully completing the 2-month AI/ML internship at RealMeds Technologies. Received outstanding remarks for model integration and EDA pipeline optimization.",
+        tech: ["Python", "Pandas", "NumPy", "EDA", "Healthcare AI"]
+      }
     },
     {
       company: 'Pipra Solutions Pvt. Ltd.',
@@ -29,14 +44,29 @@ export default function Experience() {
         { label: '+25pp Improvement' }
       ],
       bullets: [
-        'Engineered real-time multi-stage face recognition system (SCRFD + ONNX FaceNet), achieving 93% accuracy at 6-metre operational range.',
-        'Increased face recognition accuracy by 25 percentage points (70%→93%) by migrating from Haar Cascades to MTCNN + FaceNet.',
-        'Deployed custom YOLO model on Raspberry Pi 5 with Hailo-8L Accelerator; implemented PyTorch → ONNX → Hailo conversion pipeline.',
-        'Built complete dataset pipeline (collection → augmentation → labelling via Label Studio); integrated WarePro platform for session control.',
-        'Implemented WebSocket-based real-time alerting for unauthorized personnel detection with mobile push notifications.'
-      ]
+        'Engineered a real-time multi-stage face recognition pipeline (SCRFD + ONNX FaceNet), achieving 93% accuracy at a 6-meter operational range.',
+        'Boosted facial recognition accuracy by 25 percentage points (70% → 93%) by migrating legacy Haar Cascade classifiers to a robust MTCNN + FaceNet architecture.',
+        'Deployed custom YOLO models on Raspberry Pi 5 with Hailo-8L NPU accelerators, developing a PyTorch → ONNX → Hailo (HEF) conversion pipeline for local inference.',
+        'Built an end-to-end dataset pipeline (collection, augmentation, and annotation via Label Studio), integrating with the WarePro control platform for real-time edge processing.',
+        'Implemented a WebSocket alerting microservice in Python to broadcast real-time unauthorized entry events with push notifications.'
+      ],
+      certificate: {
+        title: "Internship Completion Certificate — Pipra Solutions",
+        issuer: "Pipra Solutions Pvt. Ltd.",
+        date: "Jul – Oct 2025",
+        previewUrl: `${import.meta.env.BASE_URL}certifications/Pipra Internship.png`,
+        pdfUrl: `${import.meta.env.BASE_URL}certifications/Pipra Internship.pdf`,
+        verifyUrl: "https://www.pipra.solutions",
+        description: "Awarded for successfully completing the 3-month AI/ML internship with outstanding remarks. Recognized for key contributions to the YOLO object detection and face recognition system deployed on Raspberry Pi 5 + Hailo-8L.",
+        tech: ["YOLO", "FaceNet", "SCRFD", "Hailo-8L", "Raspberry Pi 5", "ONNX", "OpenCV"]
+      }
     }
   ];
+
+  const handleViewCert = (cert: CertificateData) => {
+    setActiveCert(cert);
+    setIsModalOpen(true);
+  };
 
   return (
     <section className="py-20 md:py-32 px-4 md:px-6 bg-[#0F172A]" id="experience">
@@ -225,11 +255,49 @@ export default function Experience() {
                     </li>
                   ))}
                 </ul>
+
+                {/* Verified Internship Certificate Credentials & Badge */}
+                {exp.certificate && (
+                  <div className="mt-6 pt-6 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center gap-1 bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full text-primary font-mono text-[9px] font-bold uppercase tracking-wider">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Verified Certificate
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-mono font-bold uppercase tracking-widest">
+                        Remark: Outstanding
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleViewCert(exp.certificate)}
+                        className="flex items-center gap-1 text-[10px] font-bold text-white hover:text-primary border border-white/10 hover:border-primary px-3 py-2 rounded bg-slate-900/50 transition-all uppercase tracking-wider font-headline"
+                        aria-label={`View internship certificate for ${exp.company}`}
+                      >
+                        View
+                      </button>
+                      <a
+                        href={exp.certificate.pdfUrl}
+                        download
+                        className="flex items-center gap-1 text-[10px] font-bold text-black bg-primary hover:brightness-110 px-3 py-2 rounded transition-all uppercase tracking-wider font-headline flex items-center justify-center gap-1"
+                        aria-label={`Download certificate PDF for ${exp.company}`}
+                      >
+                        <Download className="w-3.5 h-3.5" /> PDF
+                      </a>
+                    </div>
+                  </div>
+                )}
               </Tilt>
             </motion.div>
           ))}
         </div>
       </div>
+
+      <CertificateModal
+        cert={activeCert}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </section>
   );
 }

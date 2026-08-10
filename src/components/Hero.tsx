@@ -1,9 +1,11 @@
+import { lazy, Suspense } from 'react';
 import { motion } from 'motion/react';
 import { ExternalLink, Github, Linkedin, Mail, FileText, Globe, Cpu, Database, Server } from 'lucide-react';
 import Tilt from 'react-parallax-tilt';
-import ParticleBackground from './ParticleBackground';
 import DecryptText from './DecryptText';
 import MagneticButton from './MagneticButton';
+
+const ParticleBackground = lazy(() => import('./ParticleBackground'));
 
 export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
   const metrics = [
@@ -23,13 +25,15 @@ export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
       href: 'https://leetcode.com/u/PULICHARLARAHUL',
       label: 'LeetCode'
     },
-    { icon: <Mail className="w-5 h-5" />, href: 'https://mail.google.com/mail/?view=cm&fs=1&to=rr0018619@gmail.com', label: 'Email' },
+    { icon: <Mail className="w-5 h-5" />, href: 'https://mail.google.com/mail/?view=cm&fs=1&to=rahulreddyp24@gmail.com', label: 'Email' },
     { icon: <Globe className="w-5 h-5" />, href: '#', label: 'Portfolio' },
   ];
 
   return (
     <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-4 md:px-6 pt-20 pb-12 bg-[#0F172A]" id="home">
-      <ParticleBackground />
+      <Suspense fallback={null}>
+        <ParticleBackground />
+      </Suspense>
       {/* Top-Center Radial Glow */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] pointer-events-none z-0"
@@ -58,7 +62,7 @@ export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
           </div>
 
           <div className="space-y-4 w-full">
-            <h1 className="text-[32px] sm:text-[40px] md:text-[64px] font-bold tracking-tighter leading-tight text-white whitespace-nowrap font-headline flex gap-4">
+            <h1 className="text-[32px] sm:text-[40px] md:text-[64px] font-bold tracking-tighter leading-tight text-white font-headline flex flex-wrap gap-4">
               <DecryptText text="P. Rahul Reddy" />
             </h1>
 
@@ -66,8 +70,8 @@ export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
               <DecryptText text="Edge AI & Computer Vision Engineer" />
             </p>
 
-            <p className="text-sm md:text-[16px] text-slate-400 leading-relaxed font-body">
-              Deployed production deep learning models on Raspberry Pi 5 + Hailo-8L. Engineered 93% face recognition systems and built end-to-end 98.7% fraud detection architectures.
+            <p className="text-sm md:text-[16px] text-slate-400 leading-relaxed font-body max-w-2xl">
+              Specialized in deploying high-efficiency deep learning models on resource-constrained Edge hardware (Raspberry Pi 5 + Hailo-8L NPU). Experienced in engineering real-time face recognition and local object detection systems.
             </p>
           </div>
 
@@ -89,14 +93,21 @@ export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
 
           {/* CTA Row */}
           <div className="flex flex-wrap gap-4 mt-2 w-full md:w-auto relative z-10">
-            <MagneticButton href="https://fraud-job-detection-ml.vercel.app">
-              <span className="bg-primary text-black px-8 py-4 rounded-md font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all font-headline">
-                View Live Project <ExternalLink className="w-5 h-5" />
+            <MagneticButton onClick={(e) => {
+              e.preventDefault();
+              const element = document.getElementById('projects');
+              if (element) {
+                const topPos = element.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: topPos, behavior: 'smooth' });
+              }
+            }}>
+              <span className="bg-primary text-black px-8 py-4 rounded-md font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all font-headline cursor-pointer">
+                View Projects <ExternalLink className="w-5 h-5" />
               </span>
             </MagneticButton>
 
             <MagneticButton onClick={(e) => { e.preventDefault(); onOpenResume(); }}>
-              <span className="border border-white hover:border-primary hover:text-primary text-white px-8 py-4 rounded-md font-bold transition-all bg-[#0F172A] flex items-center justify-center gap-2 font-headline">
+              <span className="border border-white hover:border-primary hover:text-primary text-white px-8 py-4 rounded-md font-bold transition-all bg-[#0F172A] flex items-center justify-center gap-2 font-headline cursor-pointer">
                 View Resume <FileText className="w-5 h-5" />
               </span>
             </MagneticButton>
