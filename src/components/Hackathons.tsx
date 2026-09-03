@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Award, Flame, ExternalLink } from 'lucide-react';
+import { Flame } from 'lucide-react';
 import { CertificateCard, CertificateModal, CertificateData } from './CertificateComponents';
+import Reveal from './motion/Reveal';
 
 export default function Hackathons() {
   const [activeCert, setActiveCert] = useState<CertificateData | null>(null);
@@ -28,65 +29,75 @@ export default function Hackathons() {
   };
 
   return (
-    <section className="py-20 md:py-32 px-4 md:px-6 bg-[#0F172A]" id="hackathons">
-      <div className="max-w-7xl mx-auto">
+    <section className="pt-8 md:pt-12 pb-20 md:pb-32 px-6 bg-background relative overflow-hidden" id="hackathons">
+      {/* Oversized Background Typography Monogram */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 pointer-events-none z-0 select-none overflow-hidden opacity-[0.025]">
+        <span className="font-headline text-[16vw] font-black tracking-tighter text-primary whitespace-nowrap">
+          HACKATHONS & INNOVATION
+        </span>
+      </div>
+
+      <div className="container-custom max-w-6xl relative z-10">
         {/* Section Heading */}
-        <div className="mb-16">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-1 h-10 bg-primary rounded-full" />
-            <motion.h2 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-bold text-white font-headline"
-            >
+        <div className="mb-10 text-center">
+          <Reveal direction="up">
+            <span className="text-micro font-mono text-primary uppercase tracking-widest bg-primary/10 px-4 py-1.5 rounded-full border border-primary/30 mb-3 inline-block font-bold">
+              NATIONAL COMPETITIONS
+            </span>
+          </Reveal>
+          <Reveal direction="up" delay={0.1}>
+            <h2 className="text-section font-headline text-text-primary mb-3 tracking-tight font-black">
               Hackathons & Innovation
-            </motion.h2>
-          </div>
-          <motion.p 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-primary font-medium font-body pl-5"
-          >
-            Developing solutions for real-world space and technology challenges
-          </motion.p>
+            </h2>
+          </Reveal>
+          <Reveal direction="up" delay={0.15}>
+            <p className="text-body-large text-text-secondary max-w-2xl mx-auto">
+              Developing solutions for real-world space and technology challenges
+            </p>
+          </Reveal>
         </div>
 
         {/* Cards Grid */}
         <div className="flex justify-center">
-          <div className="w-full md:max-w-md">
+          <div className="w-full md:max-w-xl">
             {hackathonsData.map((hackathon, index) => (
-              <div key={index} className="flex flex-col h-full">
-                <CertificateCard cert={hackathon} onView={handleViewCert} />
-                
-                {/* Additional Hackathon Details Card overlaying below the generic certificate card */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 }}
-                  className="mt-4 bg-[#1E293B]/60 border border-white/5 rounded-2xl p-6 flex flex-col gap-3 flex-grow"
-                >
-                  <div className="flex items-center gap-2 text-primary">
-                    <Flame className="w-4 h-4" />
-                    <span className="text-xs font-mono uppercase font-bold tracking-wider">Project Focus</span>
-                  </div>
+              <Reveal key={index} direction="up" delay={0.15}>
+                <div className="flex flex-col h-full">
+                  <CertificateCard cert={hackathon} onView={handleViewCert} />
                   
-                  <p className="text-slate-300 text-xs font-body leading-relaxed">
-                    {hackathon.description}
-                  </p>
+                  {/* Additional Hackathon Details Card */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -4, scale: 1.01 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 20 }}
+                    className="mt-4 bg-surface/90 border border-border/80 rounded-2xl p-6 flex flex-col gap-3 flex-grow shadow-xl hover:border-primary/40 transition-colors"
+                  >
+                    <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold uppercase tracking-wider">
+                      <Flame className="w-4 h-4" />
+                      <span>Project Focus & Impact</span>
+                    </div>
+                    
+                    <p className="text-text-secondary text-sm leading-relaxed">
+                      {hackathon.description}
+                    </p>
 
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {hackathon.tech?.map((t, idx) => (
-                      <span key={idx} className="text-[10px] font-mono text-slate-400 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              </div>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {hackathon.tech?.map((t, idx) => (
+                        <motion.span
+                          key={idx}
+                          whileHover={{ scale: 1.08, y: -2 }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+                          className="text-micro font-semibold text-text-secondary bg-surface-raised border border-border/80 px-3 py-1.5 rounded-lg hover:border-primary/50 hover:text-text-primary transition-colors cursor-default"
+                        >
+                          {t}
+                        </motion.span>
+                      ))}
+                    </div>
+                  </motion.div>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>

@@ -1,224 +1,372 @@
-import { lazy, Suspense } from 'react';
-import { motion } from 'motion/react';
-import { ExternalLink, Github, Linkedin, Mail, FileText, Globe, Cpu, Database, Server } from 'lucide-react';
-import Tilt from 'react-parallax-tilt';
-import DecryptText from './DecryptText';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useScroll, useReducedMotion, useMotionTemplate } from 'motion/react';
+import { ExternalLink, Github, Linkedin, Mail, FileText, ChevronDown } from 'lucide-react';
+import TextReveal from './motion/TextReveal';
+import Reveal from './motion/Reveal';
 import MagneticButton from './MagneticButton';
-
-const ParticleBackground = lazy(() => import('./ParticleBackground'));
+import SpotlightCard from './motion/SpotlightCard';
 
 export default function Hero({ onOpenResume }: { onOpenResume: () => void }) {
-  const metrics = [
-    { value: '98.7% Accuracy', label: 'Fraud Detection · Live' },
-    { value: '93% Accuracy', label: 'Face Recognition · 6m range' },
-  ];
+  const containerRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  const socials = [
-    { icon: <Github className="w-5 h-5" />, href: 'https://github.com/PRAHULREDD', label: 'GitHub' },
-    { icon: <Linkedin className="w-5 h-5" />, href: 'https://linkedin.com/in/rahulreddypulicharla', label: 'LinkedIn' },
-    {
-      icon: (
-        <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-          <path d="M13.483 0a1.374 1.374 0 0 0-.961.414l-11.71 11.593a1.378 1.378 0 0 0 0 1.98l1.726 1.73a1.38 1.38 0 0 0 1.98 0l11.593-11.71a1.384 1.384 0 0 0-.414-2.336L13.483 0zM6.761 11.445a.677.677 0 0 1 0-.958l1.458-1.459a.678.678 0 0 1 .959 0 .681.681 0 0 1 0 .959l-1.459 1.458a.678.678 0 0 1-.958 0zM16.24 6.472a.677.677 0 0 1 0-.958l1.459-1.459a.678.678 0 0 1 .958 0 .681.681 0 0 1 0 .959l-1.459 1.458a.675.675 0 0 1-.958 0zM3.452 14.754a.677.677 0 0 1 0-.958l1.459-1.459a.678.678 0 0 1 .958 0 .681.681 0 0 1 0 .959l-1.459 1.458a.675.675 0 0 1-.958 0zM12.93 9.783a.677.677 0 0 1 0-.958l1.459-1.459a.678.678 0 0 1 .958 0 .681.681 0 0 1 0 .959l-1.459 1.458a.675.675 0 0 1-.958 0z" />
-        </svg>
-      ),
-      href: 'https://leetcode.com/u/PULICHARLARAHUL',
-      label: 'LeetCode'
-    },
-    { icon: <Mail className="w-5 h-5" />, href: 'https://mail.google.com/mail/?view=cm&fs=1&to=rahulreddyp24@gmail.com', label: 'Email' },
-    { icon: <Globe className="w-5 h-5" />, href: '#', label: 'Portfolio' },
-  ];
+  // Scroll progress for cinematic compression
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const heroBlur = useTransform(scrollYProgress, [0.35, 0.85], [0, 8]);
+  const heroBlurStr = useMotionTemplate`blur(${heroBlur}px)`;
+
+  // Grid scroll parallax
+  const gridY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const gridOpacity = useTransform(scrollYProgress, [0, 0.5], [0.15, 0.05]);
+
+  // Ambient lighting
+  const orbScale = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
+  const orbOpacity = useTransform(scrollYProgress, [0, 0.5], [0.15, 0]);
+
+  // Subtle interactive parallax
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 22 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 22 });
+
+  const bg1X = useTransform(springX, [-0.5, 0.5], [-4, 4]);
+  const bg1Y = useTransform(springY, [-0.5, 0.5], [-4, 4]);
+  const contentX = useTransform(springX, [-0.5, 0.5], [-6, 6]);
+  const metricX = useTransform(springX, [-0.5, 0.5], [-10, 10]);
+  const metricY = useTransform(springY, [-0.5, 0.5], [-10, 10]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current || shouldReduceMotion) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
 
   return (
-    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-4 md:px-6 pt-20 pb-12 bg-[#0F172A]" id="home">
-      <Suspense fallback={null}>
-        <ParticleBackground />
-      </Suspense>
-      {/* Top-Center Radial Glow */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] pointer-events-none z-0"
-        style={{
-          background: 'radial-gradient(circle at center, rgba(34, 197, 94, 0.08) 0%, transparent 70%)',
-        }}
+    <section
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-screen flex items-center justify-center section-padding pt-32 pb-24 overflow-hidden bg-background"
+      id="home"
+    >
+      {/* ═══ Background Atmosphere ═══ */}
+      <motion.div style={{ x: bg1X, y: bg1Y }} className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(0,217,192,0.10),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_80%,rgba(0,112,243,0.06),transparent_70%)]" />
+      </motion.div>
+
+      {/* ═══ Technical Grid ═══ */}
+      <motion.div
+        style={{ translateY: gridY, opacity: gridOpacity }}
+        className="absolute inset-0 pointer-events-none z-[1]"
+      >
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00D9C012_1px,transparent_1px),linear-gradient(to_bottom,#00D9C012_1px,transparent_1px)] bg-[size:48px_48px]" />
+      </motion.div>
+
+      {/* Ambient Pulsing Orbs */}
+      <motion.div
+        style={{ scale: orbScale, opacity: orbOpacity }}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-primary/10 rounded-full blur-[140px] pointer-events-none z-0"
+      />
+      <motion.div
+        style={{ scale: orbScale, opacity: orbOpacity }}
+        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[120px] pointer-events-none z-0"
       />
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
+      {/* ═══ PLANE 4: Main Content (Scroll Compression) ═══ */}
+      <motion.div
+        style={{
+          scale: heroScale,
+          opacity: heroOpacity,
+          y: heroY,
+          filter: shouldReduceMotion ? undefined : heroBlurStr,
+          x: contentX,
+        }}
+        className="container-custom max-w-5xl mx-auto text-center relative z-10"
+      >
+        {/* Stage 0.05s — Technical Launch Telemetry Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.05, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8"
+        >
+          <div className="inline-flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-6 py-2.5 rounded-full border border-primary/40 bg-surface/90 backdrop-blur-xl shadow-2xl shadow-primary/10 hover:border-primary transition-all">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
+              </span>
+              <span className="text-micro font-mono text-primary font-bold tracking-widest">
+                SYSTEM: DEPLOYMENT READY
+              </span>
+            </div>
+            <span className="text-border hidden sm:inline">|</span>
+            <span className="text-micro font-mono text-text-secondary font-semibold">
+              EDGE AI & VISION ARCHITECT
+            </span>
+            <span className="text-border hidden sm:inline">|</span>
+            <span className="text-micro font-mono text-text-tertiary">
+              RELOCATION AVAILABLE · CHENNAI, IN
+            </span>
+          </div>
+        </motion.div>
 
-        {/* Left Column (Text) */}
+        {/* Stage 0.30s — Name (Character-level TextReveal with engineering subhead) */}
+        <div className="mb-3">
+          <div className="text-micro font-mono text-primary/70 tracking-[0.25em] uppercase mb-2">
+            ENGINEERING PORTFOLIO // 2025–2026
+          </div>
+          <TextReveal
+            text="P. Rahul Reddy"
+            el="h1"
+            className="text-hero font-headline text-text-primary tracking-tight font-black justify-center drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)]"
+            mode="character"
+            delay={0.25}
+            stagger={0.03}
+          />
+        </div>
+
+        {/* Stage 0.45s — Role & Technical Domain Signature */}
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.9, filter: 'blur(12px)' }}
+          animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+          transition={{ delay: 0.45, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-6 space-y-3"
+        >
+          <p className="text-subsection font-headline bg-gradient-to-r from-primary via-primary-hover to-secondary bg-clip-text text-transparent font-extrabold tracking-tight">
+            AI / ML & Computer Vision Engineer
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 text-micro font-mono text-text-tertiary">
+            <span className="px-2.5 py-1 rounded-md bg-surface-raised border border-border/80 text-text-secondary">
+              HAILO-8L NPU (13 TOPS)
+            </span>
+            <span>•</span>
+            <span className="px-2.5 py-1 rounded-md bg-surface-raised border border-border/80 text-text-secondary">
+              YOLOv8 + FACENET
+            </span>
+            <span>•</span>
+            <span className="px-2.5 py-1 rounded-md bg-surface-raised border border-border/80 text-text-secondary">
+              INT8 QUANTIZATION
+            </span>
+            <span>•</span>
+            <span className="px-2.5 py-1 rounded-md bg-surface-raised border border-border/80 text-text-secondary">
+              FASTAPI ML SERVING
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Stage 0.60s — Value Proposition */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <p className="text-body-large text-text-secondary max-w-3xl mx-auto mb-12 leading-relaxed font-normal">
+            Deploying production machine learning & real-time computer vision on resource-constrained hardware.
+            Specialized in <span className="text-text-primary font-semibold">SCRFD + FaceNet</span>,{' '}
+            <span className="text-text-primary font-semibold">YOLOv8 INT8</span>, and{' '}
+            <span className="text-primary font-bold">Hailo-8L NPU acceleration</span> under 5W power.
+          </p>
+        </motion.div>
+
+        {/* ═══ PLANE 5: Telemetry Console Deck (4 Core Technical Anchors) ═══ */}
+        <motion.div style={{ x: metricX, y: metricY }}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-14 max-w-5xl mx-auto">
+            {[
+              {
+                value: '98.7%',
+                label: 'Fraud Detection Accuracy',
+                sub: 'SVM · SMOTE · F1 0.978',
+                target: 'projects',
+                delay: 0.7,
+              },
+              {
+                value: '93%',
+                label: 'Face Recognition @ 6M',
+                sub: 'SCRFD + FaceNet ONNX',
+                target: 'projects',
+                delay: 0.76,
+              },
+              {
+                value: '13 TOPS',
+                label: 'Hailo-8L NPU Accel',
+                sub: 'INT8 Quantized · RPi5',
+                target: 'projects',
+                delay: 0.82,
+              },
+              {
+                value: '6 Mo',
+                label: 'Production ML Shipped',
+                sub: 'Pipra & RealMeds Intern',
+                target: 'experience',
+                delay: 0.88,
+              },
+            ].map((metric) => (
+              <motion.div
+                key={metric.value}
+                initial={{ opacity: 0, y: 35, scale: 0.9, rotateX: -12 }}
+                animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                transition={{ delay: metric.delay, duration: 0.6, type: 'spring', damping: 18 }}
+                style={{ perspective: '600px' }}
+                whileHover={{ y: -4, scale: 1.02 }}
+                onClick={() => {
+                  const element = document.getElementById(metric.target);
+                  if (element) {
+                    const topPos = element.getBoundingClientRect().top + window.scrollY - 80;
+                    window.scrollTo({ top: topPos, behavior: 'smooth' });
+                  }
+                }}
+                className="cursor-pointer"
+              >
+                <SpotlightCard className="!p-5 text-center border-primary/30 hover:border-primary shadow-xl h-full flex flex-col justify-between group">
+                  <div className="text-4xl md:text-5xl font-black text-primary font-headline mb-1.5 tracking-tighter drop-shadow-[0_0_20px_rgba(0,217,192,0.35)] group-hover:scale-105 transition-transform">
+                    {metric.value}
+                  </div>
+                  <div>
+                    <div className="text-caption text-text-primary font-bold tracking-wider mb-1">
+                      {metric.label}
+                    </div>
+                    <div className="text-[10px] font-mono text-text-tertiary group-hover:text-primary transition-colors">
+                      {metric.sub}
+                    </div>
+                  </div>
+                </SpotlightCard>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Stage 0.95s — CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.95, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-14">
+            <MagneticButton intensity={35}>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.getElementById('projects');
+                  if (element) {
+                    const topPos = element.getBoundingClientRect().top + window.scrollY - 80;
+                    window.scrollTo({ top: topPos, behavior: 'smooth' });
+                  }
+                }}
+                className="btn-primary flex items-center justify-center gap-2.5 text-base font-bold px-9 py-4 rounded-full shadow-xl shadow-primary/25 hover:shadow-primary/40 group"
+              >
+                <span>View Projects</span>
+                <div className="w-7 h-7 rounded-full bg-background/20 flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+                  <ExternalLink className="w-4 h-4 text-background" />
+                </div>
+              </button>
+            </MagneticButton>
+
+            <MagneticButton intensity={35}>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpenResume();
+                }}
+                className="btn-secondary flex items-center justify-center gap-2.5 text-base font-bold px-9 py-4 rounded-full backdrop-blur-md group"
+              >
+                <span>View Resume</span>
+                <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <FileText className="w-4 h-4 text-primary" />
+                </div>
+              </button>
+            </MagneticButton>
+          </div>
+        </motion.div>
+
+        {/* Stage 1.0s — Social Links */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-start gap-8 flex-1 w-full max-w-2xl"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Top-Left Badge */}
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold tracking-wide uppercase">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
-            </span>
-            <span className="text-sm">Seeking Full-Time Roles  · Open to Relocation</span>
+          <div className="flex gap-6 justify-center items-center">
+            <MagneticButton intensity={45}>
+              <a
+                href="https://github.com/PRAHULREDD"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3.5 rounded-2xl bg-surface/80 border border-border text-text-secondary hover:text-primary hover:border-primary transition-all flex items-center justify-center shadow-lg"
+                aria-label="GitHub Profile"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+            </MagneticButton>
+
+            <MagneticButton intensity={45}>
+              <a
+                href="https://linkedin.com/in/rahulreddypulicharla"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3.5 rounded-2xl bg-surface/80 border border-border text-text-secondary hover:text-primary hover:border-primary transition-all flex items-center justify-center shadow-lg"
+                aria-label="LinkedIn Profile"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+            </MagneticButton>
+
+            <MagneticButton intensity={45}>
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=rahulreddyp24@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3.5 rounded-2xl bg-surface/80 border border-border text-text-secondary hover:text-primary hover:border-primary transition-all flex items-center justify-center shadow-lg"
+                aria-label="Email Contact"
+              >
+                <Mail className="w-5 h-5" />
+              </a>
+            </MagneticButton>
           </div>
+        </motion.div>
 
-          <div className="space-y-4 w-full">
-            <h1 className="text-[32px] sm:text-[40px] md:text-[64px] font-bold tracking-tighter leading-tight text-white font-headline flex flex-wrap gap-4">
-              <DecryptText text="P. Rahul Reddy" />
-            </h1>
-
-            <p className="text-[18px] md:text-[24px] font-medium text-primary font-headline">
-              <DecryptText text="Edge AI & Computer Vision Engineer" />
-            </p>
-
-            <p className="text-sm md:text-[16px] text-slate-400 leading-relaxed font-body max-w-2xl">
-              Specialized in deploying high-efficiency deep learning models on resource-constrained Edge hardware (Raspberry Pi 5 + Hailo-8L NPU). Experienced in engineering real-time face recognition and local object detection systems.
-            </p>
-          </div>
-
-          {/* Metric Chips */}
-          <div className="w-full overflow-x-auto scrollbar-hide pb-2">
-            <div className="flex flex-nowrap gap-4 min-w-max md:min-w-0">
-              {metrics.map((metric, index) => (
-                <div
-                  key={index}
-                  className="bg-[#1E293B]/80 backdrop-blur-md border border-primary/30 rounded-lg p-4 min-w-[220px] md:min-w-0 flex-1 relative overflow-hidden group"
-                >
-                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <div className="text-primary font-bold text-xl mb-1 relative z-10">{metric.value}</div>
-                  <div className="text-slate-400 text-xs font-medium uppercase tracking-wider relative z-10">{metric.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA Row */}
-          <div className="flex flex-wrap gap-4 mt-2 w-full md:w-auto relative z-10">
-            <MagneticButton onClick={(e) => {
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+          className="mt-16 inline-block"
+        >
+          <motion.a
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
+            href="#projects"
+            onClick={(e) => {
               e.preventDefault();
               const element = document.getElementById('projects');
               if (element) {
                 const topPos = element.getBoundingClientRect().top + window.scrollY - 80;
                 window.scrollTo({ top: topPos, behavior: 'smooth' });
               }
-            }}>
-              <span className="bg-primary text-black px-8 py-4 rounded-md font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all font-headline cursor-pointer">
-                View Projects <ExternalLink className="w-5 h-5" />
-              </span>
-            </MagneticButton>
-
-            <MagneticButton onClick={(e) => { e.preventDefault(); onOpenResume(); }}>
-              <span className="border border-white hover:border-primary hover:text-primary text-white px-8 py-4 rounded-md font-bold transition-all bg-[#0F172A] flex items-center justify-center gap-2 font-headline cursor-pointer">
-                View Resume <FileText className="w-5 h-5" />
-              </span>
-            </MagneticButton>
-          </div>
-
-          {/* Social Row */}
-          <div className="flex gap-8 mt-2 relative z-10">
-            {socials.map((social, index) => (
-              <motion.a
-                key={index}
-                whileHover={{ scale: 1.2, color: '#22C55E' }}
-                className="text-slate-400 transition-colors p-2 -m-2 group relative"
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-              >
-                {social.icon}
-                <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
-                  {social.label}
-                </div>
-              </motion.a>
-            ))}
-          </div>
+            }}
+            className="text-text-tertiary hover:text-primary transition-colors p-2 flex flex-col items-center gap-1.5 group"
+            aria-label="Scroll to Projects"
+          >
+            <span className="text-micro font-mono tracking-widest text-text-tertiary group-hover:text-primary font-bold">
+              EXPLORE WORK
+            </span>
+            <ChevronDown className="w-5 h-5 text-primary" />
+          </motion.a>
         </motion.div>
+      </motion.div>
 
-        {/* Right Column (Abstract Data Core Avatar) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3, type: "spring" }}
-          className="hidden lg:flex flex-1 justify-center items-center perspective-1000 relative w-full h-[500px]"
-          role="img"
-          aria-label="Abstract 3D glowing data core representing Edge AI logic processing"
-        >
-          {/* Interactive Mouse-Tracking Wrapper */}
-          <Tilt tiltMaxAngleX={15} tiltMaxAngleY={15} perspective={1000} transitionSpeed={800} className="relative w-full h-full flex justify-center items-center">
-            {/* Supernova Aura */}
-            <div className="absolute w-[300px] h-[300px] bg-primary/20 rounded-full blur-[100px] animate-pulse pointer-events-none"></div>
-
-            {/* The Sun / Central AI Brain */}
-            <div className="relative w-32 h-32 flex justify-center items-center pointer-events-none">
-              <div className="absolute inset-0 bg-primary/20 border border-primary/50 shadow-[0_0_50px_rgba(34,197,94,0.5)] rounded-full animate-pulse" />
-              {/* Wireframe Planet */}
-              <div className="absolute inset-0 rounded-full border border-primary/40 transform-gpu animate-[spin_8s_linear_infinite]" />
-              <div className="absolute inset-0 rounded-full border border-primary/40 transform-gpu rotate-x-[60deg] animate-[spin_12s_linear_infinite_reverse]" />
-              <div className="absolute inset-0 rounded-full border border-primary/40 transform-gpu rotate-y-[60deg] animate-[spin_10s_linear_infinite]" />
-              <Cpu className="w-10 h-10 text-primary z-10" />
-            </div>
-
-            {/* Orbit 1: Inner Ring (Hardware) */}
-            <div className="absolute border border-white/10 rounded-full border-dashed animate-[spin_15s_linear_infinite] pointer-events-none flex items-center justify-center" style={{ width: '280px', height: '280px' }}>
-                <div className="absolute top-0 -translate-y-1/2 animate-[spin_15s_linear_infinite_reverse]">
-                   <div className="bg-[#1E293B]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg pointer-events-auto hover:border-[#FFBD2E] transition-all cursor-crosshair">
-                     <span className="w-1.5 h-1.5 rounded-full bg-[#FFBD2E] animate-ping" />
-                     <span className="text-[10px] font-mono text-[#FFBD2E] font-bold whitespace-nowrap">Hailo-8L NPU</span>
-                   </div>
-                </div>
-                
-                <div className="absolute bottom-0 translate-y-1/2 animate-[spin_15s_linear_infinite_reverse]">
-                   <div className="bg-[#1E293B]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg pointer-events-auto hover:border-[#FFBD2E] transition-all cursor-crosshair">
-                     <Cpu className="w-3 h-3 text-[#FFBD2E]" />
-                     <span className="text-[10px] font-mono text-slate-300 font-bold whitespace-nowrap">Raspberry Pi 5</span>
-                   </div>
-                </div>
-            </div>
-
-            {/* Orbit 2: Middle Ring (Vision / Deep Learning) */}
-            <div className="absolute border border-white/10 rounded-full animate-[spin_25s_linear_infinite_reverse] pointer-events-none flex items-center justify-center" style={{ width: '400px', height: '400px' }}>
-                <div className="absolute bottom-0 translate-y-1/2 animate-[spin_25s_linear_infinite]">
-                   <div className="bg-[#1E293B]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg pointer-events-auto hover:border-primary transition-all cursor-crosshair">
-                     <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
-                     <span className="text-[10px] font-mono text-primary font-bold whitespace-nowrap">FaceNet / SCRFD</span>
-                   </div>
-                </div>
-                
-                <div className="absolute left-0 -translate-x-1/2 animate-[spin_25s_linear_infinite]">
-                   <div className="bg-[#1E293B]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg pointer-events-auto hover:border-[#FF5F56] transition-all cursor-crosshair">
-                     <span className="w-1.5 h-1.5 rounded-full bg-[#FF5F56] animate-ping" />
-                     <span className="text-[10px] font-mono text-[#FF5F56] font-bold whitespace-nowrap">YOLOv8 Processing</span>
-                   </div>
-                </div>
-
-                <div className="absolute top-0 -translate-y-1/2 animate-[spin_25s_linear_infinite]">
-                   <div className="bg-[#1E293B]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg pointer-events-auto hover:border-blue-400 transition-all cursor-crosshair">
-                     <Database className="w-3 h-3 text-blue-400" />
-                     <span className="text-[10px] font-mono text-slate-300 font-bold whitespace-nowrap">PyTorch / ONNX</span>
-                   </div>
-                </div>
-            </div>
-
-            {/* Orbit 3: Outer Ring (Backend & NLP Server) */}
-            <div className="absolute border border-white/5 rounded-full border-dashed animate-[spin_35s_linear_infinite] pointer-events-none flex items-center justify-center" style={{ width: '540px', height: '540px' }}>
-                <div className="absolute right-0 translate-x-1/2 animate-[spin_35s_linear_infinite_reverse]">
-                   <div className="bg-[#1E293B]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg pointer-events-auto hover:border-white transition-all cursor-crosshair">
-                     <Globe className="w-3 h-3 text-white opacity-70" />
-                     <span className="text-[10px] font-mono text-slate-300 font-bold whitespace-nowrap">FastAPI / React</span>
-                   </div>
-                </div>
-                
-                <div className="absolute left-0 -translate-x-1/2 animate-[spin_35s_linear_infinite_reverse]">
-                   <div className="bg-[#1E293B]/80 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg pointer-events-auto hover:border-teal-400 transition-all cursor-crosshair">
-                     <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-                     <span className="text-[10px] font-mono text-teal-400 font-bold whitespace-nowrap">SVM & NLP Engine</span>
-                   </div>
-                </div>
-            </div>
-            
-          </Tilt>
-        </motion.div>
-      </div>
+      {/* ═══ Seamless Atmosphere Bridge into Projects ═══ */}
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-b from-transparent via-background/60 to-background pointer-events-none z-[2]" />
+      <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[600px] h-[120px] bg-primary/10 rounded-full blur-[100px] pointer-events-none z-0" />
     </section>
   );
 }

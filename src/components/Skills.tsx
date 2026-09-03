@@ -1,214 +1,297 @@
-import { motion } from 'motion/react';
-import { useRef, useMemo, useState } from 'react';
-import { Network, Grid, Brain, Eye, Cpu, Server, Code, Database } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Code, Database, Brain, Eye, Cpu, Server, Sparkles, Link2 } from 'lucide-react';
+import Reveal from './motion/Reveal';
+import SpotlightCard from './motion/SpotlightCard';
+
+// Skill-to-project relationship map (only factual connections)
+const skillProjectMap: Record<string, string[]> = {
+  'Python': ['JobSpark AI', 'Face Recognition', 'Edge AI'],
+  'YOLO (v8/v11)': ['Edge AI'],
+  'FaceNet': ['Face Recognition'],
+  'SCRFD': ['Face Recognition'],
+  'OpenCV': ['Face Recognition', 'Edge AI'],
+  'Hailo-8L NPU': ['Edge AI'],
+  'Raspberry Pi 5': ['Edge AI'],
+  'ONNX Runtime': ['Edge AI', 'Face Recognition'],
+  'FastAPI': ['JobSpark AI'],
+  'Scikit-learn': ['JobSpark AI'],
+  'SVM': ['JobSpark AI'],
+  'PyTorch': ['Edge AI'],
+  'WebSockets': ['Face Recognition'],
+};
 
 export default function Skills() {
-  const constraintsRef = useRef(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'playground'>('grid');
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [activeLevelFilter, setActiveLevelFilter] = useState<string | null>(null);
+  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
 
-  const coreSkills = [
-    'Python', 'FastAPI', 'React', 'TypeScript',
-    'OpenCV', 'FaceNet', 'YOLO', 'ONNX Runtime', 
-    'PyTorch', 'TensorFlow', 'Scikit-learn', 'SVM',
-    'Hailo-8L', 'Raspberry Pi 5', 'Docker', 'Vercel'
+  const skillCategories = [
+    {
+      category: 'Languages & Tools',
+      icon: <Code className="w-5 h-5" />,
+      skills: [
+        { name: 'Python', level: 'expert' },
+        { name: 'TypeScript', level: 'proficient' },
+        { name: 'JavaScript', level: 'proficient' },
+        { name: 'SQL', level: 'proficient' },
+        { name: 'Java', level: 'proficient' },
+      ],
+    },
+    {
+      category: 'Machine Learning',
+      icon: <Database className="w-5 h-5" />,
+      skills: [
+        { name: 'Scikit-learn', level: 'expert' },
+        { name: 'SVM', level: 'expert' },
+        { name: 'TF-IDF', level: 'proficient' },
+        { name: 'SMOTE', level: 'proficient' },
+      ],
+    },
+    {
+      category: 'Deep Learning',
+      icon: <Brain className="w-5 h-5" />,
+      skills: [
+        { name: 'PyTorch', level: 'expert' },
+        { name: 'TensorFlow', level: 'proficient' },
+        { name: 'Keras', level: 'proficient' },
+        { name: 'CNN', level: 'expert' },
+      ],
+    },
+    {
+      category: 'Computer Vision',
+      icon: <Eye className="w-5 h-5" />,
+      skills: [
+        { name: 'OpenCV', level: 'expert' },
+        { name: 'YOLO (v8/v11)', level: 'expert' },
+        { name: 'FaceNet', level: 'expert' },
+        { name: 'SCRFD', level: 'expert' },
+        { name: 'MediaPipe', level: 'proficient' },
+      ],
+    },
+    {
+      category: 'Edge AI & Deployment',
+      icon: <Cpu className="w-5 h-5" />,
+      skills: [
+        { name: 'Raspberry Pi 5', level: 'expert' },
+        { name: 'Hailo-8L NPU', level: 'expert' },
+        { name: 'ONNX Runtime', level: 'expert' },
+        { name: 'Model Quantization', level: 'proficient' },
+        { name: 'TensorRT', level: 'familiar' },
+      ],
+    },
+    {
+      category: 'Backend & Infrastructure',
+      icon: <Server className="w-5 h-5" />,
+      skills: [
+        { name: 'FastAPI', level: 'expert' },
+        { name: 'Docker', level: 'proficient' },
+        { name: 'Git / GitHub', level: 'expert' },
+        { name: 'Linux', level: 'proficient' },
+        { name: 'WebSockets', level: 'proficient' },
+      ],
+    },
   ];
-  
-  const tier1 = ['Edge AI', 'Computer Vision', 'YOLO', 'OpenCV', 'FaceNet', 'SCRFD', 'MTCNN', 'ONNX Runtime', 'Hailo-8L', 'Raspberry Pi 5'];
-  const tier2 = ['Python', 'Scikit-learn', 'TensorFlow', 'PyTorch', 'SVM', 'Naive Bayes', 'CNN', 'SMOTE', 'TF-IDF'];
 
-  // Categorized Skills Data structure for standard grid view
-  const categorizedSkills = [
-    {
-      category: "Languages",
-      icon: <Code className="w-5 h-5 text-primary" />,
-      skills: ["Python", "SQL", "C", "TypeScript", "JavaScript", "HTML/CSS"]
-    },
-    {
-      category: "Machine Learning",
-      icon: <Database className="w-5 h-5 text-primary" />,
-      skills: ["Scikit-learn", "XGBoost", "SVM", "Naive Bayes", "SMOTE", "TF-IDF", "EDA"]
-    },
-    {
-      category: "Deep Learning",
-      icon: <Brain className="w-5 h-5 text-primary" />,
-      skills: ["PyTorch", "TensorFlow", "Keras", "CNN (Convolutional Neural Networks)"]
-    },
-    {
-      category: "Computer Vision",
-      icon: <Eye className="w-5 h-5 text-primary" />,
-      skills: ["OpenCV", "YOLO (v8/v11)", "MediaPipe", "FaceNet", "SCRFD", "MTCNN"]
-    },
-    {
-      category: "Edge AI & Deployment",
-      icon: <Cpu className="w-5 h-5 text-primary" />,
-      skills: ["Raspberry Pi 5", "Hailo-8L NPU", "ONNX Runtime", "TensorRT", "Model Quantization"]
-    },
-    {
-      category: "Backend & Tools",
-      icon: <Server className="w-5 h-5 text-primary" />,
-      skills: ["FastAPI", "Docker", "Git / GitHub", "Linux", "Label Studio", "WebSockets", "Vercel"]
+  const getSkillClass = (level: string) => {
+    switch (level) {
+      case 'expert':
+        return 'bg-primary text-background font-bold shadow-md shadow-primary/25';
+      case 'proficient':
+        return 'bg-surface-raised border border-primary/50 text-primary hover:bg-primary/15 font-semibold';
+      case 'familiar':
+        return 'bg-surface-raised border border-border text-text-secondary hover:text-text-primary';
+      default:
+        return 'bg-surface-raised text-text-secondary';
     }
-  ];
+  };
 
-  // Calculate physics properties once so they don't snap on re-render.
-  const nodes = useMemo(() => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const boundsX = isMobile ? 180 : 450;
-    const boundsY = isMobile ? 280 : 250;
+  // Check if a skill is related to the currently hovered skill
+  const isRelatedSkill = (skillName: string): boolean => {
+    if (!hoveredSkill) return false;
+    const hoveredProjects = skillProjectMap[hoveredSkill] || [];
+    const skillProjects = skillProjectMap[skillName] || [];
+    return hoveredProjects.some((p) => skillProjects.includes(p));
+  };
 
-    return coreSkills.map(skill => ({
-      name: skill,
-      initialX: (Math.random() - 0.5) * boundsX, 
-      initialY: (Math.random() - 0.5) * boundsY, 
-      floatY: [Math.random() * 30 - 15, Math.random() * -30 + 15, Math.random() * 30 - 15],
-      floatX: [Math.random() * 30 - 15, Math.random() * -30 + 15, Math.random() * 30 - 15],
-      duration: Math.random() * 4 + 4,
-    }));
-  }, []);
+  const hoveredSkillProjects = hoveredSkill ? (skillProjectMap[hoveredSkill] || []) : [];
 
   return (
-    <section className="relative py-20 md:py-32 px-4 md:px-6 bg-[#0F172A] overflow-hidden" id="skills">
-      {/* Background radial pacing */}
-      <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-[-10%] w-[600px] h-[600px] bg-teal-500/5 blur-[150px] rounded-full pointer-events-none" />
-      
-      {/* Background Marquee (Faded) */}
-      <div className="absolute inset-0 z-0 flex flex-col justify-center opacity-[0.02] pointer-events-none -rotate-6 scale-110">
-        <div className="flex whitespace-nowrap animate-marquee" style={{ animationDuration: '60s' }}>
-          {[...tier1, ...tier1, ...tier1, ...tier1].map((skill, i) => (
-             <span key={i} className="text-6xl md:text-8xl font-black text-white px-8">{skill}</span>
-          ))}
-        </div>
-        <div className="flex whitespace-nowrap animate-marquee mt-10" style={{ animationDuration: '70s', animationDirection: 'reverse' }}>
-          {[...tier2, ...tier2, ...tier2, ...tier2].map((skill, i) => (
-             <span key={i} className="text-6xl md:text-8xl font-black text-white px-8">{skill}</span>
-          ))}
-        </div>
+    <section className="section-padding bg-surface/20 relative overflow-hidden" id="skills">
+      {/* Section Watermark */}
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 pointer-events-none z-0 select-none overflow-hidden opacity-[0.025]">
+        <span className="font-headline text-[16vw] font-black tracking-tighter text-primary whitespace-nowrap">
+          SKILLS & ARCHITECTURE
+        </span>
       </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Section Heading */}
-        <div className="mb-12 max-w-4xl mx-auto text-center flex flex-col items-center">
-          <div className="flex items-center gap-4 mb-4 justify-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white font-headline">
-              Technical Arsenal
+      <div className="container-custom relative z-10">
+        {/* Section Header */}
+        <div className="mb-16 text-center">
+          <Reveal direction="up" distance={40}>
+            <span className="text-micro font-mono text-primary uppercase tracking-widest bg-primary/10 px-4 py-1.5 rounded-full border border-primary/30 mb-4 inline-block font-bold">
+              TECHNICAL ARCHITECTURE & TOOLING
+            </span>
+          </Reveal>
+
+          <Reveal direction="up" delay={0.1} distance={50}>
+            <h2 className="text-section font-headline text-text-primary mb-3 tracking-tight font-black">
+              Core Competencies
             </h2>
-            <div className="w-1 h-10 bg-primary rounded-full hidden md:block" />
-          </div>
-          
-          <p className="text-slate-400 font-body max-w-xl mb-8">
-            Expertise in deploying optimized computer vision and machine learning systems at the edge.
-          </p>
+          </Reveal>
 
-          {/* Toggle Tabs */}
-          <div className="inline-flex p-1 rounded-xl bg-slate-900 border border-white/5 relative z-20 shadow-2xl mb-8">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 font-headline cursor-pointer ${
-                viewMode === 'grid' 
-                  ? 'bg-primary text-black shadow-lg' 
-                  : 'text-slate-400 hover:text-white'
-              }`}
-              aria-label="Show structured grid view"
-            >
-              <Grid className="w-4 h-4" /> Grid View
-            </button>
-            <button
-              onClick={() => setViewMode('playground')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 font-headline cursor-pointer ${
-                viewMode === 'playground' 
-                  ? 'bg-primary text-black shadow-lg' 
-                  : 'text-slate-400 hover:text-white'
-              }`}
-              aria-label="Show interactive physics playground"
-            >
-              <Network className="w-4 h-4" /> Interactive Playground
-            </button>
-          </div>
+          <Reveal direction="up" delay={0.15} distance={40}>
+            <div className="flex items-center justify-center gap-3 text-micro font-mono text-text-tertiary mb-6">
+              <span>6 STACK DOMAINS</span>
+              <span>•</span>
+              <span className="text-primary font-bold">13 TOPS NPU TARGET</span>
+              <span>•</span>
+              <span>PRODUCTION VALIDATED</span>
+            </div>
+          </Reveal>
+
+          <Reveal direction="up" delay={0.2} distance={50}>
+            <p className="text-body-large text-text-secondary max-w-2xl mx-auto mb-8">
+              Production expertise across edge neural processors, computer vision pipelines, and scalable ML services
+            </p>
+          </Reveal>
+
+          {/* Level Filter Pills */}
+          <Reveal direction="up" delay={0.25} distance={40}>
+            <div className="inline-flex flex-wrap items-center justify-center gap-3 p-2 bg-surface/90 border border-border/90 rounded-2xl backdrop-blur-xl shadow-2xl">
+              <button
+                onClick={() => setActiveLevelFilter(null)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 ${
+                  activeLevelFilter === null
+                    ? 'bg-primary text-background shadow-lg shadow-primary/30'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-surface-raised'
+                }`}
+              >
+                All Skills
+              </button>
+              <button
+                onClick={() => setActiveLevelFilter(activeLevelFilter === 'expert' ? null : 'expert')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                  activeLevelFilter === 'expert'
+                    ? 'bg-primary text-background shadow-lg shadow-primary/30'
+                    : 'text-text-secondary hover:text-primary hover:bg-surface-raised'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-primary" />
+                <span>Expert (Production)</span>
+              </button>
+              <button
+                onClick={() => setActiveLevelFilter(activeLevelFilter === 'proficient' ? null : 'proficient')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                  activeLevelFilter === 'proficient'
+                    ? 'bg-primary/25 text-primary border border-primary'
+                    : 'text-text-secondary hover:text-primary hover:bg-surface-raised'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full border-2 border-primary" />
+                <span>Proficient (Project)</span>
+              </button>
+              <button
+                onClick={() => setActiveLevelFilter(activeLevelFilter === 'familiar' ? null : 'familiar')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                  activeLevelFilter === 'familiar'
+                    ? 'bg-surface-raised text-text-primary border border-border'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-surface-raised'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-text-tertiary" />
+                <span>Familiar</span>
+              </button>
+            </div>
+          </Reveal>
         </div>
-        
-        {/* View Mode Rendering */}
-        <div className="relative min-h-[500px]">
-          {viewMode === 'grid' ? (
-            /* Categorized Grid View */
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {categorizedSkills.map((cat, idx) => (
-                <div 
-                  key={idx}
-                  className="bg-[#1E293B]/70 backdrop-blur-md border border-white/5 rounded-2xl p-6 hover:border-primary/20 hover:shadow-[0_0_25px_rgba(34,197,94,0.05)] transition-all duration-500 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-white/5">
-                      <div className="p-2 bg-primary/10 rounded-lg shrink-0">
-                        {cat.icon}
-                      </div>
-                      <h3 className="text-lg font-bold text-white font-headline tracking-wide">
-                        {cat.category}
-                      </h3>
-                    </div>
 
-                    <div className="flex flex-wrap gap-2">
-                      {cat.skills.map((skill, sIdx) => (
-                        <span 
-                          key={sIdx}
-                          className="px-3 py-1.5 bg-slate-900 border border-white/5 hover:border-primary/30 rounded-lg text-xs text-slate-300 font-body transition-colors cursor-default"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          ) : (
-            /* Physics Interactive Sandbox */
-            <motion.div 
-              ref={constraintsRef}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="relative w-full h-[500px] md:h-[550px] rounded-3xl border border-white/10 bg-[#1E293B]/20 backdrop-blur-md overflow-hidden flex items-center justify-center shadow-2xl inner-shadow"
+        {/* Hovered Skill → Project Connection Indicator */}
+        <AnimatePresence>
+          {hoveredSkill && hoveredSkillProjects.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-6 flex items-center justify-center gap-3 text-xs font-mono text-primary"
             >
-              {/* Subtle grid background to look like a canvas */}
-              <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-              
-              {nodes.map((node, i) => (
-                <motion.div 
-                  drag
-                  dragConstraints={constraintsRef}
-                  dragElastic={0.2}
-                  dragTransition={{ bounceStiffness: 400, bounceDamping: 10 }}
-                  initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
-                  animate={{ 
-                    x: node.initialX, 
-                    y: node.initialY, 
-                    opacity: 1, 
-                    scale: 1 
-                  }}
-                  transition={{ 
-                    opacity: { duration: 0.5, delay: i * 0.03 },
-                    scale: { type: "spring", delay: i * 0.03 },
-                  }}
-                  whileHover={{ scale: 1.12, zIndex: 50, borderColor: "rgba(34, 197, 94, 0.4)", backgroundColor: "rgba(30, 41, 59, 1)" }}
-                  whileTap={{ scale: 0.95, cursor: "grabbing" }}
-                  key={i} 
-                  className="absolute px-5 py-3 bg-[#1E293B]/90 backdrop-blur-md border border-white/10 text-white font-bold rounded-full cursor-grab tracking-wide font-headline select-none shadow-[0_5px_15px_rgba(0,0,0,0.3)] flex items-center gap-2 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-colors text-xs"
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_#22C55E]" />
-                  {node.name}
-                </motion.div>
+              <Link2 className="w-3.5 h-3.5" />
+              <span className="font-bold">{hoveredSkill}</span>
+              <span className="text-text-tertiary">→</span>
+              {hoveredSkillProjects.map((p) => (
+                <span key={p} className="px-2.5 py-1 bg-primary/10 border border-primary/30 rounded-lg text-primary font-semibold">
+                  {p}
+                </span>
               ))}
-              
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-slate-500 font-mono uppercase tracking-widest text-center select-none pointer-events-none">
-                💡 Grab and drag the tech nodes around the sandbox
-              </div>
             </motion.div>
           )}
+        </AnimatePresence>
+
+        {/* Skills Category Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {skillCategories.map((category, idx) => {
+            const isCategoryHovered = hoveredCategory === category.category;
+            const isAnyHovered = hoveredCategory !== null;
+
+            return (
+              <Reveal key={category.category} direction="up" delay={idx * 0.08} distance={60}>
+                <SpotlightCard
+                  onMouseEnter={() => setHoveredCategory(category.category)}
+                  onMouseLeave={() => setHoveredCategory(null)}
+                  className={`h-full transition-all duration-300 ${
+                    isAnyHovered && !isCategoryHovered ? 'opacity-35 scale-[0.97]' : 'opacity-100 scale-100'
+                  }`}
+                >
+                  {/* Category Header */}
+                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/80">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-3 rounded-xl border shadow-md transition-all duration-300 ${
+                        isCategoryHovered
+                          ? 'bg-primary text-background border-primary shadow-primary/30'
+                          : 'bg-primary/15 text-primary border-primary/30'
+                      }`}>
+                        {category.icon}
+                      </div>
+                      <h3 className="font-headline font-bold text-xl text-text-primary">
+                        {category.category}
+                      </h3>
+                    </div>
+                    {isCategoryHovered && <Sparkles className="w-5 h-5 text-primary animate-pulse" />}
+                  </div>
+
+                  {/* Skills Pills */}
+                  <div className="flex flex-wrap gap-2.5">
+                    {category.skills.map((skill) => {
+                      const isHighlighted = activeLevelFilter === null || activeLevelFilter === skill.level;
+                      const isRelated = isRelatedSkill(skill.name);
+                      const isHoveredDirectly = hoveredSkill === skill.name;
+
+                      return (
+                        <motion.span
+                          key={skill.name}
+                          onMouseEnter={() => setHoveredSkill(skill.name)}
+                          onMouseLeave={() => setHoveredSkill(null)}
+                          whileHover={{ scale: 1.12, y: -3 }}
+                          transition={{ type: 'spring', stiffness: 450, damping: 20 }}
+                          className={`inline-flex items-center justify-center ${getSkillClass(skill.level)} px-4 py-2 rounded-xl text-xs transition-all duration-200 cursor-default ${
+                            !isHighlighted ? 'opacity-25 grayscale' : 'opacity-100'
+                          } ${
+                            isHoveredDirectly
+                              ? 'ring-2 ring-primary ring-offset-2 ring-offset-background shadow-[0_0_12px_#00D9C060]'
+                              : isRelated && hoveredSkill
+                                ? 'ring-1 ring-primary/50 shadow-[0_0_8px_#00D9C030]'
+                                : ''
+                          }`}
+                        >
+                          {skill.name}
+                        </motion.span>
+                      );
+                    })}
+                  </div>
+                </SpotlightCard>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>

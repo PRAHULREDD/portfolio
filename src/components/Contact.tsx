@@ -1,158 +1,180 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Github, Linkedin, Code2, Send, CheckCircle2, Loader2 } from 'lucide-react';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useScroll, useTransform, useReducedMotion } from 'motion/react';
+import { Mail, Github, Linkedin, Code2, ArrowUpRight } from 'lucide-react';
+import Reveal from './motion/Reveal';
 import MagneticButton from './MagneticButton';
 
-
 export default function Contact() {
-  const [result, setResult] = useState("");
+  const containerRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setResult("Sending...");
-    const formData = new FormData(event.currentTarget);
+  // Scroll-driven background intensity
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end end'],
+  });
 
-    // Using the user's Web3Forms access key
-    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY);
+  const bgIntensity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [0.8, 1.2]);
 
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData
-      });
+  // Pointer position for ambient glow orb
+  const orbX = useMotionValue(0);
+  const orbY = useMotionValue(0);
 
-      const data = await response.json();
+  const springOrbX = useSpring(orbX, { stiffness: 50, damping: 25 });
+  const springOrbY = useSpring(orbY, { stiffness: 50, damping: 25 });
 
-      if (data.success) {
-        setResult("Message Sent Successfully!");
-        (event.target as HTMLFormElement).reset();
-        setTimeout(() => setResult(""), 5000);
-      } else {
-        console.log("Error", data);
-        setResult(data.message);
-      }
-    } catch (error) {
-      setResult("Form submission failed!");
-    }
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current || shouldReduceMotion) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    orbX.set(e.clientX - rect.left);
+    orbY.set(e.clientY - rect.top);
   };
 
   return (
-    <section className="py-20 md:py-32 px-4 md:px-6 bg-[#0F172A]" id="contact">
-      <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-16">
-        <motion.div
-          className="flex-1"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-1 h-10 bg-primary rounded-full" />
-            <h2 className="text-5xl font-bold text-white tracking-tight font-headline">
-              Get In Touch
-            </h2>
-          </div>
-          <p className="text-slate-400 text-lg mb-8 font-body leading-relaxed">
-            Open to entry-level roles in Machine Learning Engineering, Computer Vision, or AI Development. Based in India — open to remote and relocation.
+    <section
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="section-padding bg-background relative overflow-hidden"
+      id="contact"
+    >
+      {/* Scroll-Driven Background Intensity */}
+      <motion.div
+        style={{ opacity: bgIntensity, scale: bgScale }}
+        className="absolute inset-0 pointer-events-none z-0"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(0,217,192,0.12),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_60%_60%,rgba(0,112,243,0.08),transparent_70%)]" />
+      </motion.div>
+
+      {/* Pointer-Tracking Ambient Orb */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-full blur-[180px] z-0 hidden md:block"
+        style={{
+          left: springOrbX,
+          top: springOrbY,
+          width: '600px',
+          height: '600px',
+          transform: 'translate(-50%, -50%)',
+          opacity: 0.3,
+          background: 'radial-gradient(circle, rgba(0, 217, 192, 0.3) 0%, rgba(0, 112, 243, 0.15) 40%, transparent 75%)',
+        }}
+      />
+
+      {/* Oversized Background Typography */}
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 pointer-events-none z-0 select-none overflow-hidden opacity-[0.025]">
+        <span className="font-headline text-[16vw] font-black tracking-tighter text-primary whitespace-nowrap">
+          INITIATE CONTACT
+        </span>
+      </div>
+
+      {/* Atmospheric grid */}
+      <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#00D9C015_1px,transparent_1px),linear-gradient(to_bottom,#00D9C015_1px,transparent_1px)] bg-[size:36px_36px] pointer-events-none" />
+
+      <div className="container-custom max-w-4xl text-center relative z-10">
+        {/* Section Header */}
+        <Reveal direction="up" distance={40}>
+          <span className="text-micro font-mono text-primary uppercase tracking-widest bg-primary/10 px-4 py-1.5 rounded-full border border-primary/30 mb-6 inline-block font-bold">
+            INITIATE CONTACT
+          </span>
+        </Reveal>
+
+        <Reveal direction="up" delay={0.1} distance={50}>
+          <h2 className="text-section font-headline text-text-primary mb-6 tracking-tight font-black">
+            Let's Connect & Build
+          </h2>
+        </Reveal>
+
+        <Reveal direction="up" delay={0.2} distance={50}>
+          <p className="text-body-large text-text-secondary mb-14 max-w-2xl mx-auto leading-relaxed">
+            Open to full-time opportunities in ML Engineering, Computer Vision, or AI Development.
+            Based in India — open to relocation and remote work globally.
           </p>
-          
-          <div className="mt-12 flex gap-6">
-            <motion.a 
-              whileHover={{ y: -5 }}
-              className="group flex flex-col items-center gap-2" 
-              href="https://github.com/PRAHULREDD"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary transition-all">
-                <Github className="w-5 h-5 text-slate-400 group-hover:text-primary" />
-              </div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">GitHub</span>
-            </motion.a>
-            <motion.a 
-              whileHover={{ y: -5 }}
-              className="group flex flex-col items-center gap-2" 
-              href="https://linkedin.com/in/rahulreddypulicharla"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary transition-all">
-                <Linkedin className="w-5 h-5 text-slate-400 group-hover:text-primary" />
-              </div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">LinkedIn</span>
-            </motion.a>
-            <motion.a 
-              whileHover={{ y: -5 }}
-              className="group flex flex-col items-center gap-2" 
-              href="https://leetcode.com/u/PULICHARLARAHUL"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary transition-all">
-                <Code2 className="w-5 h-5 text-slate-400 group-hover:text-primary" />
-              </div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 group-hover:text-primary">LeetCode</span>
-            </motion.a>
-          </div>
-        </motion.div>
+        </Reveal>
 
-        <motion.div
-          className="flex-1 bg-[#1E293B] p-8 rounded-xl border border-white/5"
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <form onSubmit={onSubmit} className="flex flex-col gap-6">
-            <div className="relative group">
-              <input type="text" name="name" id="name" required className="peer w-full bg-transparent border-b-2 border-white/10 p-2 pt-6 pb-2 text-white placeholder-transparent focus:outline-none focus:border-primary transition-colors focus:bg-primary/5" placeholder="Your name" />
-              <label htmlFor="name" className="absolute left-2 top-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:top-1 peer-focus:text-[10px] peer-focus:text-primary peer-focus:uppercase peer-focus:tracking-widest">Name</label>
-            </div>
-            
-            <div className="relative group">
-              <input type="email" name="email" id="email" required className="peer w-full bg-transparent border-b-2 border-white/10 p-2 pt-6 pb-2 text-white placeholder-transparent focus:outline-none focus:border-primary transition-colors focus:bg-primary/5" placeholder="your.email@example.com" />
-              <label htmlFor="email" className="absolute left-2 top-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:top-1 peer-focus:text-[10px] peer-focus:text-primary peer-focus:uppercase peer-focus:tracking-widest">Email</label>
-            </div>
-
-            <div className="relative group">
-              <textarea name="message" id="message" required rows={4} className="peer w-full bg-transparent border-b-2 border-white/10 p-2 pt-6 pb-2 text-white placeholder-transparent focus:outline-none focus:border-primary transition-colors focus:bg-primary/5 resize-none" placeholder="How can I help you?"></textarea>
-              <label htmlFor="message" className="absolute left-2 top-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-placeholder-shown:normal-case peer-focus:top-1 peer-focus:text-[10px] peer-focus:text-primary peer-focus:uppercase peer-focus:tracking-widest">Message</label>
-            </div>
-
-            <MagneticButton className="mt-2 w-full" intensity={20}>
-              <motion.button 
-                type="submit"
-                disabled={result === "Sending..." || result === "Message Sent Successfully!"}
-                whileHover={result ? {} : { scale: 1.02 }}
-                whileTap={result ? {} : { scale: 0.98 }}
-                className={`w-full font-bold py-4 rounded-md flex justify-center items-center gap-2 transition-all font-headline ${
-                  result === "Message Sent Successfully!"
-                    ? "bg-slate-800 text-primary border border-primary/20 cursor-default"
-                    : result === "Sending..."
-                    ? "bg-primary/50 text-black cursor-wait"
-                    : "bg-primary text-black hover:brightness-110"
-                }`}
+        {/* Primary Email CTA — Cinematic Magnetic CTA */}
+        <Reveal direction="up" delay={0.3} distance={60}>
+          <div className="mb-16">
+            <MagneticButton intensity={45}>
+              <motion.a
+                href="mailto:rahulreddyp24@gmail.com"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="btn-primary text-xl px-12 py-5 rounded-full flex items-center justify-center gap-4 shadow-2xl shadow-primary/30 hover:shadow-[0_0_40px_#00D9C050] border border-primary/40 group transition-all relative overflow-hidden"
               >
-                {result === "Sending..." ? (
-                  <>
-                    Sending... <Loader2 className="w-4 h-4 animate-spin" />
-                  </>
-                ) : result === "Message Sent Successfully!" ? (
-                  <>
-                    Message Sent <CheckCircle2 className="w-4 h-4" />
-                  </>
-                ) : (
-                  <>
-                    Send Message <Send className="w-4 h-4" />
-                  </>
-                )}
-              </motion.button>
+                {/* Breathing glow pulse */}
+                <motion.div
+                  animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.05, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 rounded-full pointer-events-none"
+                />
+                <Mail className="w-7 h-7 group-hover:scale-110 transition-transform relative z-10" />
+                <span className="font-extrabold tracking-tight relative z-10">rahulreddyp24@gmail.com</span>
+                <motion.div
+                  whileHover={{ x: 3, y: -3 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                  className="w-8 h-8 rounded-full bg-background/20 flex items-center justify-center relative z-10"
+                >
+                  <ArrowUpRight className="w-5 h-5 text-background" />
+                </motion.div>
+              </motion.a>
             </MagneticButton>
-            {result && result !== "Sending..." && result !== "Message Sent Successfully!" && (
-              <span className="text-sm text-center font-medium mt-2 text-yellow-500">{result}</span>
-            )}
-          </form>
-        </motion.div>
+          </div>
+        </Reveal>
+
+        {/* Social Links */}
+        <Reveal direction="up" delay={0.4} distance={40}>
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+            {[
+              { href: 'https://github.com/PRAHULREDD', icon: <Github className="w-5 h-5" />, label: 'GitHub' },
+              { href: 'https://linkedin.com/in/rahulreddypulicharla', icon: <Linkedin className="w-5 h-5" />, label: 'LinkedIn' },
+              { href: 'https://leetcode.com/u/PULICHARLARAHUL', icon: <Code2 className="w-5 h-5" />, label: 'LeetCode' },
+            ].map((link) => (
+              <div key={link.label}>
+                <MagneticButton intensity={30}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-3.5 px-8 py-4 bg-surface/90 border border-border/90 rounded-full hover:border-primary/60 hover:text-primary hover:bg-surface hover:-translate-y-0.5 hover:shadow-lg transition-all text-text-secondary backdrop-blur-xl shadow-xl font-bold text-base group"
+                  >
+                    {link.icon}
+                    <span>{link.label}</span>
+                    <ArrowUpRight className="w-4 h-4 text-text-tertiary group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  </a>
+                </MagneticButton>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* ═══ FINAL BRAND MARK — Cinematic Closing ═══ */}
+        <Reveal direction="up" delay={0.5} distance={30}>
+          <div className="mt-20 pt-12 border-t border-border/30">
+            {/* Horizontal signature line */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-px bg-gradient-to-r from-transparent to-primary/40" />
+              <span className="w-2 h-2 rounded-full bg-primary/40" />
+              <div className="w-12 h-px bg-gradient-to-l from-transparent to-primary/40" />
+            </div>
+
+            {/* Identity mark */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 1.2 }}
+              className="text-center"
+            >
+              <div className="text-2xl font-headline font-black text-text-primary/60 tracking-tight mb-1">
+                P. Rahul Reddy
+              </div>
+              <div className="text-xs font-mono text-primary/40 tracking-[0.25em] uppercase">
+                Edge AI · Computer Vision · ML Engineering
+              </div>
+            </motion.div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

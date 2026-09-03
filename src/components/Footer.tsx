@@ -1,52 +1,109 @@
-import { motion } from 'motion/react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 import MagneticButton from './MagneticButton';
 
 export default function Footer({ onOpenResume }: { onOpenResume: () => void }) {
   return (
-    <footer className="bg-[#0F172A] pt-32 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[600px] bg-primary/5 blur-[150px] rounded-full pointer-events-none" />
-      
-      {/* Massive CTA */}
-      <div className="max-w-7xl mx-auto px-6 mb-32 text-center relative z-10">
-        <motion.h2 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-[12vw] sm:text-6xl md:text-8xl font-black text-white font-headline tracking-tighter mb-12 leading-tight"
-        >
-          LET'S BUILD SOMETHING <br />
-          <span className="text-primary italic pr-4">EXTRAORDINARY.</span>
-        </motion.h2>
-        
-        <motion.div
-           initial={{ opacity: 0, scale: 0.9 }}
-           whileInView={{ opacity: 1, scale: 1 }}
-           viewport={{ once: true }}
-           transition={{ delay: 0.2 }}
-        >
-          <MagneticButton href="https://mail.google.com/mail/?view=cm&fs=1&to=rahulreddyp24@gmail.com">
-            <span className="inline-flex items-center gap-2 bg-primary text-black px-10 py-5 rounded-full font-bold text-lg hover:brightness-110 transition-all font-headline tracking-wide uppercase shadow-[0_0_40px_rgba(34,197,94,0.3)]">
-              Start a Conversation
-            </span>
-          </MagneticButton>
-        </motion.div>
-      </div>
+    <footer className="bg-surface/80 border-t border-primary/20 py-12 relative overflow-hidden">
+      {/* Top gradient bleed from Contact */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent pointer-events-none" />
+      <div className="container-custom relative z-10">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start">
+          {/* Left - Branding */}
+          <div>
+            <a
+              href="#home"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="font-headline text-xl font-bold text-primary mb-2 inline-block hover:text-primary-hover transition-colors"
+            >
+              P. Rahul Reddy
+            </a>
+            <p className="text-sm text-text-secondary">
+              Edge AI & Computer Vision Engineer
+            </p>
+            <p className="text-xs text-text-tertiary mt-2">
+              Deploying deep learning pipelines on resource-constrained hardware
+            </p>
+          </div>
 
-      {/* Actual Footer Base */}
-      <div className="bg-slate-950 py-12 border-t border-white/5 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-8">
-          <div className="text-primary font-bold text-lg font-headline">
-            P. Rahul Reddy
+          {/* Center - Quick Links */}
+          <div>
+            <h4 className="text-caption text-text-tertiary font-mono mb-4">QUICK NAVIGATION</h4>
+            <div className="flex flex-col gap-2.5">
+              <a href="#projects" className="text-sm text-text-secondary hover:text-primary transition-colors w-fit">
+                Projects
+              </a>
+              <a href="#experience" className="text-sm text-text-secondary hover:text-primary transition-colors w-fit">
+                Experience
+              </a>
+              <a href="#skills" className="text-sm text-text-secondary hover:text-primary transition-colors w-fit">
+                Skills
+              </a>
+              <a href="#about" className="text-sm text-text-secondary hover:text-primary transition-colors w-fit">
+                About
+              </a>
+              <button
+                onClick={onOpenResume}
+                className="text-sm text-text-secondary hover:text-primary transition-colors text-left w-fit"
+              >
+                Resume
+              </button>
+            </div>
           </div>
-          <div className="text-sm text-slate-500 text-center md:text-left font-body">
-            Edge AI & Computer Vision Engineer · Built with React + Vite · 2026
+
+          {/* Right - Social */}
+          <div>
+            <h4 className="text-caption text-text-tertiary font-mono mb-4">CONNECT</h4>
+            <div className="flex gap-3">
+              <MagneticButton intensity={30}>
+                <a
+                  href="https://github.com/PRAHULREDD"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-xl bg-background border border-border text-text-secondary hover:text-primary hover:border-primary transition-all flex items-center justify-center"
+                  aria-label="GitHub"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+              </MagneticButton>
+
+              <MagneticButton intensity={30}>
+                <a
+                  href="https://linkedin.com/in/rahulreddypulicharla"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-xl bg-background border border-border text-text-secondary hover:text-primary hover:border-primary transition-all flex items-center justify-center"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </MagneticButton>
+
+              <MagneticButton intensity={30}>
+                <a
+                  href="mailto:rahulreddyp24@gmail.com"
+                  className="p-3 rounded-xl bg-background border border-border text-text-secondary hover:text-primary hover:border-primary transition-all flex items-center justify-center"
+                  aria-label="Email"
+                >
+                  <Mail className="w-5 h-5" />
+                </a>
+              </MagneticButton>
+            </div>
           </div>
-          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-            <a className="text-slate-500 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest cursor-pointer" href="https://linkedin.com/in/rahulreddypulicharla" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a className="text-slate-500 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest cursor-pointer" href="https://github.com/PRAHULREDD" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a className="text-slate-500 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest cursor-pointer" href="https://mail.google.com/mail/?view=cm&fs=1&to=rahulreddyp24@gmail.com" target="_blank" rel="noopener noreferrer">Email</a>
-            <button className="text-slate-500 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest cursor-pointer bg-transparent border-none p-0 focus:outline-none" onClick={onOpenResume}>Resume</button>
+        </div>
+
+        {/* Bottom Copyright */}
+        <div className="pt-8 border-t border-border/80">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-text-tertiary">
+            <div>
+              © 2026 P. Rahul Reddy. Built with React + Vite + Motion.
+            </div>
+            <div>
+              Chennai, India · Open to Relocation
+            </div>
           </div>
         </div>
       </div>

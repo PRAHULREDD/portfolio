@@ -1,303 +1,291 @@
-import { useState } from 'react';
-import { motion } from 'motion/react';
-import Tilt from 'react-parallax-tilt';
-import { Database, Cpu, Activity, TrendingUp, CheckCircle2, Download } from 'lucide-react';
-import { CertificateModal, CertificateData } from './CertificateComponents';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import { CheckCircle2, Download, Calendar, MapPin, Building } from 'lucide-react';
+import Reveal from './motion/Reveal';
+import SpotlightCard from './motion/SpotlightCard';
 
 export default function Experience() {
-  const [activeCert, setActiveCert] = useState<CertificateData | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start 70%', 'end 90%'],
+  });
+
+  const beamScaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 22,
+    restDelta: 0.001,
+  });
+
+  // Traveling energy particle position
+  const energyY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const energyOpacity = useTransform(scrollYProgress, [0, 0.05, 0.9, 1], [0, 1, 1, 0]);
+
+  // Node activation thresholds
+  const node1Opacity = useTransform(scrollYProgress, [0.1, 0.25], [0.3, 1]);
+  const node1Scale = useTransform(scrollYProgress, [0.1, 0.25], [0.6, 1]);
+  const node2Opacity = useTransform(scrollYProgress, [0.5, 0.65], [0.3, 1]);
+  const node2Scale = useTransform(scrollYProgress, [0.5, 0.65], [0.6, 1]);
 
   const experiences = [
     {
       company: 'RealMeds Technologies Pvt. Ltd.',
       logo: 'RM',
-      logoColor: 'bg-teal-500/20 text-teal-500',
+      logoColor: 'bg-[#14b8a6] text-background',
       role: 'AI / ML Intern',
-      duration: 'Oct 2025 – Dec 2025 · 2 months · Thiruvananthapuram, Kerala',
-      tags: ['Python', 'Pandas', 'NumPy', 'Machine Learning', 'Healthcare AI', 'EDA'],
-      bullets: [
-        'Engineered data preprocessing modules using Python, Pandas, and NumPy, optimizing data preparation workflows for medical machine learning pipelines.',
-        'Collaborated with cross-functional healthcare engineering teams to integrate machine learning models into the RealMeds production system, ensuring compliance with medical data standards.',
-        'Conducted exploratory data analysis (EDA) and standardized the dataset loading pipeline, reducing preprocessing latencies and improving data quality for model training.'
+      duration: 'Oct 2025 – Dec 2025 · 3 months',
+      location: 'Thiruvananthapuram, Kerala',
+      tags: ['Python', 'Pandas', 'NumPy', 'Healthcare AI', 'EDA'],
+      achievements: [
+        'Engineered data preprocessing modules using Python, Pandas, and NumPy for medical ML pipelines',
+        'Integrated ML models into RealMeds production system with healthcare data standards compliance',
+        'Standardized dataset loading pipeline, reducing preprocessing latencies',
       ],
       certificate: {
-        title: "Internship Completion Certificate — RealMeds Technologies",
-        issuer: "RealMeds Technologies Pvt. Ltd.",
-        date: "Oct – Dec 2025",
+        title: 'Internship Certificate — RealMeds Technologies',
         previewUrl: `${import.meta.env.BASE_URL}certifications/Realmeds Internship.png`,
         pdfUrl: `${import.meta.env.BASE_URL}certifications/Realmeds Internship.pdf`,
-        verifyUrl: "https://www.realmeds.in",
-        description: "Awarded for successfully completing the 2-month AI/ML internship at RealMeds Technologies. Received outstanding remarks for model integration and EDA pipeline optimization.",
-        tech: ["Python", "Pandas", "NumPy", "EDA", "Healthcare AI"]
-      }
+      },
     },
     {
       company: 'Pipra Solutions Pvt. Ltd.',
       logo: 'PS',
-      logoColor: 'bg-primary/20 text-primary',
+      logoColor: 'bg-primary text-background',
       role: 'AI / ML Intern',
-      duration: 'Jul 2025 – Oct 2025 · 3 months · Hyderabad, India',
-      tags: ['Python', 'YOLO', 'FaceNet', 'SCRFD', 'ONNX', 'Hailo-8L', 'Raspberry Pi 5', 'OpenCV', 'WebSocket'],
+      duration: 'Jul 2025 – Oct 2025 · 4 months',
+      location: 'Hyderabad, India',
+      tags: ['YOLO', 'FaceNet', 'SCRFD', 'Hailo-8L', 'Raspberry Pi 5', 'ONNX'],
       metrics: [
-        { label: '93% Face Recog. Accuracy' },
-        { label: '+25pp Improvement' }
+        { value: '93%', label: 'Recognition Accuracy' },
+        { value: '+25pp', label: 'Improvement' },
       ],
-      bullets: [
-        'Engineered a real-time multi-stage face recognition pipeline (SCRFD + ONNX FaceNet), achieving 93% accuracy at a 6-meter operational range.',
-        'Boosted facial recognition accuracy by 25 percentage points (70% → 93%) by migrating legacy Haar Cascade classifiers to a robust MTCNN + FaceNet architecture.',
-        'Deployed custom YOLO models on Raspberry Pi 5 with Hailo-8L NPU accelerators, developing a PyTorch → ONNX → Hailo (HEF) conversion pipeline for local inference.',
-        'Built an end-to-end dataset pipeline (collection, augmentation, and annotation via Label Studio), integrating with the WarePro control platform for real-time edge processing.',
-        'Implemented a WebSocket alerting microservice in Python to broadcast real-time unauthorized entry events with push notifications.'
+      achievements: [
+        'Engineered real-time face recognition pipeline achieving 93% accuracy at 6-meter range',
+        'Boosted accuracy by 25 percentage points migrating from Haar Cascades to SCRFD + FaceNet',
+        'Deployed custom YOLO models on Raspberry Pi 5 with Hailo-8L NPU (PyTorch → ONNX → HEF)',
+        'Built end-to-end dataset pipeline with Label Studio for model retraining',
       ],
       certificate: {
-        title: "Internship Completion Certificate — Pipra Solutions",
-        issuer: "Pipra Solutions Pvt. Ltd.",
-        date: "Jul – Oct 2025",
+        title: 'Internship Certificate — Pipra Solutions',
         previewUrl: `${import.meta.env.BASE_URL}certifications/Pipra Internship.png`,
         pdfUrl: `${import.meta.env.BASE_URL}certifications/Pipra Internship.pdf`,
-        verifyUrl: "https://www.pipra.solutions",
-        description: "Awarded for successfully completing the 3-month AI/ML internship with outstanding remarks. Recognized for key contributions to the YOLO object detection and face recognition system deployed on Raspberry Pi 5 + Hailo-8L.",
-        tech: ["YOLO", "FaceNet", "SCRFD", "Hailo-8L", "Raspberry Pi 5", "ONNX", "OpenCV"]
-      }
-    }
+      },
+    },
   ];
 
-  const handleViewCert = (cert: CertificateData) => {
-    setActiveCert(cert);
-    setIsModalOpen(true);
-  };
-
   return (
-    <section className="py-20 md:py-32 px-4 md:px-6 bg-[#0F172A]" id="experience">
-      <div className="max-w-4xl mx-auto">
-        {/* Section Heading */}
-        <div className="mb-20">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-1 h-10 bg-primary rounded-full" />
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-bold text-white font-headline"
-            >
-              Work Experience
-            </motion.h2>
-          </div>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-primary font-medium font-body pl-5"
-          >
-            5 months · 2 internships · Production systems shipped
-          </motion.p>
-        </div>
-        
-        <div className="relative space-y-12">
-          {/* Timeline Vertical Line */}
-          <div className="absolute left-[11px] top-2 bottom-2 w-0.5 bg-primary/20" />
-
-          {experiences.map((exp, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="relative pl-12"
-            >
-              {/* Timeline Dot */}
-              <div className="absolute left-0 top-2 w-6 h-6 flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_#22C55E]" />
-              </div>
-
-              {/* Experience Card */}
-              <Tilt tiltMaxAngleX={3} tiltMaxAngleY={3} perspective={1000} scale={1.01} transitionSpeed={2000} glareEnable={true} glareMaxOpacity={0.05} glareColor="#ffffff" glarePosition="all" className="bg-[#1E293B] p-6 md:p-8 rounded-xl border-l-4 border-primary shadow-xl hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 relative overflow-hidden">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${exp.logoColor}`}>
-                      {exp.logo}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white font-headline">{exp.company}</h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="px-2.5 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest rounded border border-primary/20">
-                          {exp.role}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-slate-400 text-sm font-medium mb-4 font-body">
-                  {exp.duration}
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {exp.tags.map((tag, i) => (
-                    <span key={i} className="text-xs font-mono text-slate-500 uppercase tracking-wider bg-slate-800/50 px-2 py-1 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {exp.metrics && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 py-4 border-y border-white/5">
-                    {exp.metrics.map((metric, i) => (
-                      <div key={i} className="text-center md:text-left">
-                        <div className="text-primary font-bold text-sm">{metric.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                
-                {/* RealMeds ETL Pipeline visualizer */}
-                {exp.company.includes('RealMeds') && (
-                  <div className="mb-8 p-4 bg-[#0F172A]/50 rounded-lg border border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 py-6 px-8 relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                    
-                    <div className="flex flex-col items-center gap-3 relative z-10">
-                      <div className="w-14 h-14 rounded-full bg-[#1E293B] border border-teal-500/30 flex items-center justify-center text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.15)] group-hover:border-teal-400 transition-colors duration-500">
-                        <Database className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold">Extract</span>
-                    </div>
-                    
-                    <div className="flex-[0] md:flex-1 w-px h-8 md:w-auto md:h-px bg-gradient-to-b md:bg-gradient-to-r from-teal-500/10 via-teal-500/50 to-teal-500/10 relative z-10 my-1 md:my-0">
-                       <div className="absolute top-0 md:top-1/2 left-1/2 md:left-0 -translate-x-1/2 md:-translate-x-0 md:-translate-y-1/2 w-2 h-2 rounded-full bg-teal-400 animate-[shimmer_2s_infinite] shadow-[0_0_8px_#2dd4bf]" />
-                    </div>
-                    
-                    <div className="flex flex-col items-center gap-3 relative z-10">
-                      <div className="w-14 h-14 rounded-full bg-[#1E293B] border border-teal-500/30 flex items-center justify-center text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.15)] group-hover:border-teal-400 transition-colors duration-500">
-                        <Cpu className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold">Process (EDA)</span>
-                    </div>
-                    
-                    <div className="flex-[0] md:flex-1 w-px h-8 md:w-auto md:h-px bg-gradient-to-b md:bg-gradient-to-r from-teal-500/10 via-teal-500/50 to-teal-500/10 relative z-10 my-1 md:my-0">
-                       <div className="absolute top-0 md:top-1/2 left-1/2 md:left-0 -translate-x-1/2 md:-translate-x-0 md:-translate-y-1/2 w-2 h-2 rounded-full bg-teal-400 animate-[shimmer_2s_infinite_0.7s] shadow-[0_0_8px_#2dd4bf]" />
-                    </div>
-                    
-                    <div className="flex flex-col items-center gap-3 relative z-10">
-                      <div className="w-14 h-14 rounded-full bg-[#1E293B] border border-teal-500/30 flex items-center justify-center text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.15)] group-hover:border-teal-400 transition-colors duration-500">
-                        <Activity className="w-6 h-6" />
-                      </div>
-                      <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold">Train</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Pipra Solutions Accuracy Chart visualizer */}
-                {exp.company.includes('Pipra') && (
-                  <div className="mb-8 p-6 bg-[#0F172A]/50 rounded-lg border border-white/5 relative overflow-hidden group">
-                     <div className="flex justify-between items-center text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-6 border-b border-white/5 pb-2">
-                       <span className="flex items-center gap-2"><TrendingUp className="w-3 h-3 text-primary" /> Accuracy Migration</span>
-                       <span className="text-primary font-bold bg-primary/10 px-2 py-1 rounded">+25% Increase in Live Env</span>
-                     </div>
-                     <div className="flex items-end gap-6 md:gap-16 h-32 pl-4 pr-6 md:pr-12 pb-6 border-b border-l border-white/10 relative w-full max-w-sm mx-auto">
-                       
-                       {/* Chart Y-Axis Labels */}
-                       <div className="absolute left-[-2rem] bottom-0 w-6 flex flex-col justify-between h-full items-end text-[9px] text-slate-600 font-mono pb-4">
-                         <span>100%</span>
-                         <span>50%</span>
-                         <span>0%</span>
-                       </div>
-
-                       {/* Chart Bars */}
-                       <div className="flex-1 flex flex-col justify-end items-center relative h-full">
-                         <div className="w-full max-w-[60px] bg-[#1E293B] border border-white/10 rounded-t-md h-[40%] transition-all duration-500 hover:bg-slate-700/50 hover:border-slate-500 relative flex justify-center z-10">
-                           <span className="absolute -top-6 text-xs text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity">70%</span>
-                         </div>
-                         <span className="absolute -bottom-6 text-[10px] text-slate-500 font-mono whitespace-nowrap">Haar Cascades</span>
-                       </div>
-                       
-                       <div className="flex-1 flex flex-col justify-end items-center relative h-full">
-                         <div className="w-full max-w-[60px] bg-primary/20 border border-primary/50 rounded-t-md h-[85%] relative overflow-hidden group-hover:bg-primary/30 group-hover:border-primary transition-all duration-500 flex justify-center shadow-[0_0_20px_rgba(34,197,94,0.15)] z-10">
-                           <div className="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-t from-transparent to-primary/20 animate-pulse" />
-                           <span className="absolute -top-6 text-xs text-primary font-bold opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md">93%</span>
-                         </div>
-                         <span className="absolute -bottom-6 text-[10px] text-primary font-mono font-bold whitespace-nowrap">MTCNN+FaceNet</span>
-                       </div>
-                       
-                       {/* Ascending Trend Line connecting top of bars */}
-                       <svg className="absolute inset-0 w-full h-full pointer-events-none z-20" preserveAspectRatio="none">
-                         <motion.path 
-                           initial={{ pathLength: 0, opacity: 0 }}
-                           whileInView={{ pathLength: 1, opacity: 1 }}
-                           viewport={{ once: true }}
-                           transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-                           d="M 25% 60% L 75% 15%" 
-                           stroke="#22C55E" 
-                           strokeWidth="2" 
-                           strokeDasharray="4 4"
-                           fill="none" 
-                         />
-                         {/* Glowing dot at the end */}
-                         <motion.circle
-                           initial={{ opacity: 0 }}
-                           whileInView={{ opacity: 1 }}
-                           viewport={{ once: true }}
-                           transition={{ delay: 2 }}
-                           cx="75%" cy="15%" r="3" fill="#22C55E" className="animate-ping shadow-[0_0_10px_#22C55E]"
-                         />
-                       </svg>
-                     </div>
-                  </div>
-                )}
-
-                <ul className="space-y-3">
-                  {exp.bullets.map((bullet, i) => (
-                    <li key={i} className="flex gap-3 text-slate-400 text-sm leading-relaxed font-body">
-                      <span className="text-primary mt-1.5">•</span>
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Verified Internship Certificate Credentials & Badge */}
-                {exp.certificate && (
-                  <div className="mt-6 pt-6 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <div className="flex items-center gap-1 bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full text-primary font-mono text-[9px] font-bold uppercase tracking-wider">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Verified Certificate
-                      </div>
-                      <span className="text-[10px] text-slate-500 font-mono font-bold uppercase tracking-widest">
-                        Remark: Outstanding
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleViewCert(exp.certificate)}
-                        className="flex items-center gap-1 text-[10px] font-bold text-white hover:text-primary border border-white/10 hover:border-primary px-3 py-2 rounded bg-slate-900/50 transition-all uppercase tracking-wider font-headline"
-                        aria-label={`View internship certificate for ${exp.company}`}
-                      >
-                        View
-                      </button>
-                      <a
-                        href={exp.certificate.pdfUrl}
-                        download
-                        className="flex items-center gap-1 text-[10px] font-bold text-black bg-primary hover:brightness-110 px-3 py-2 rounded transition-all uppercase tracking-wider font-headline flex items-center justify-center gap-1"
-                        aria-label={`Download certificate PDF for ${exp.company}`}
-                      >
-                        <Download className="w-3.5 h-3.5" /> PDF
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </Tilt>
-            </motion.div>
-          ))}
-        </div>
+    <section className="section-padding bg-background relative overflow-hidden" id="experience" ref={containerRef}>
+      {/* Oversized Background Typography */}
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 pointer-events-none z-0 select-none overflow-hidden opacity-[0.025]">
+        <span className="font-headline text-[16vw] font-black tracking-tighter text-primary whitespace-nowrap">
+          EXPERIENCE
+        </span>
       </div>
 
-      <CertificateModal
-        cert={activeCert}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <div className="container-custom max-w-5xl relative z-10">
+        {/* Section Header */}
+        <div className="mb-20 text-center">
+          <Reveal direction="up" distance={40}>
+            <span className="text-micro font-mono text-primary uppercase tracking-widest bg-primary/10 px-4 py-1.5 rounded-full border border-primary/30 mb-4 inline-block font-bold">
+              CAREER TRACK
+            </span>
+          </Reveal>
+          <Reveal direction="up" delay={0.1} distance={50}>
+            <h2 className="text-section font-headline text-text-primary mb-4 tracking-tight font-black">
+              Work Experience
+            </h2>
+          </Reveal>
+          <Reveal direction="up" delay={0.2} distance={50}>
+            <p className="text-body-large text-primary font-extrabold text-xl">
+              6 months · 2 internships · Production systems shipped
+            </p>
+          </Reveal>
+        </div>
+
+        {/* Timeline Container */}
+        <div className="relative">
+          {/* Timeline Background Track */}
+          <div className="absolute left-4 md:left-[19px] top-8 bottom-8 w-1 bg-surface-raised rounded-full hidden md:block" />
+
+          {/* Scroll-Drawn Glowing Beam */}
+          <motion.div
+            style={{ scaleY: beamScaleY }}
+            className="absolute left-4 md:left-[19px] top-8 bottom-8 w-1 bg-gradient-to-b from-primary via-primary-hover to-secondary rounded-full origin-top hidden md:block shadow-[0_0_15px_#00D9C0]"
+          />
+
+          {/* Traveling Energy Particle */}
+          <motion.div
+            style={{ top: energyY, opacity: energyOpacity }}
+            className="absolute left-[15px] md:left-[15px] w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_#00D9C0,0_0_25px_#00D9C080] hidden md:block z-20"
+          />
+
+          <div className="space-y-16">
+            {experiences.map((exp, index) => {
+              const nodeOpacity = index === 0 ? node1Opacity : node2Opacity;
+              const nodeScale = index === 0 ? node1Scale : node2Scale;
+
+              return (
+                <Reveal
+                  key={index}
+                  direction={index === 0 ? 'right' : 'left'}
+                  delay={index * 0.15}
+                  distance={70}
+                >
+                  <div className="relative md:pl-20">
+                    {/* Animated Timeline Node */}
+                    <div className="absolute left-0 top-8 hidden md:block z-10">
+                      <motion.div
+                        style={{ opacity: nodeOpacity, scale: nodeScale }}
+                        className="relative flex h-10 w-10 items-center justify-center"
+                      >
+                        {/* Unified single pulse ring */}
+                        <motion.span
+                          animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.4 }}
+                          className="absolute inline-flex h-full w-full rounded-full bg-primary/25"
+                        />
+                        {/* Core dot */}
+                        <span className="relative inline-flex rounded-full h-5 w-5 bg-primary border-4 border-background shadow-[0_0_15px_#00D9C0]" />
+                      </motion.div>
+                    </div>
+
+                    {/* Experience Card */}
+                    <SpotlightCard className="border-border/90 hover:border-primary/50 transform-gpu transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,217,192,0.12)] shadow-2xl relative overflow-hidden">
+                      {/* Top Track Telemetry Strip */}
+                      <div className="flex items-center justify-between pb-4 mb-6 border-b border-border/70 text-micro font-mono">
+                        <span className="text-primary font-bold flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                          TRACK // {index === 0 ? 'HEALTHCARE ML & DATA PIPELINES' : 'COMPUTER VISION & EDGE NPU SYSTEMS'}
+                        </span>
+                        <span className="text-text-tertiary">
+                          LOG: 0{index + 1} // VERIFIED PRODUCTION
+                        </span>
+                      </div>
+
+                      {/* Header */}
+                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+                        <div className="flex items-start gap-4">
+                          <div
+                            className={`w-16 h-16 rounded-2xl flex items-center justify-center font-black text-2xl ${exp.logoColor} shrink-0 shadow-xl border border-white/10`}
+                          >
+                            {exp.logo}
+                          </div>
+                          <div>
+                            <h3 className="text-2xl md:text-3xl font-black text-text-primary font-headline tracking-tight mb-1">
+                              {exp.company}
+                            </h3>
+                            <div className="text-base md:text-lg text-primary font-bold mb-2 flex items-center gap-2 font-headline">
+                              <Building className="w-4 h-4" /> {exp.role}
+                            </div>
+                            <div className="text-xs text-text-secondary flex flex-wrap items-center gap-2.5 font-mono font-medium">
+                              <span className="flex items-center gap-1.5 bg-surface-raised px-2.5 py-1 rounded-md border border-border/80">
+                                <Calendar className="w-3.5 h-3.5 text-primary" /> {exp.duration}
+                              </span>
+                              <span className="flex items-center gap-1.5 bg-surface-raised px-2.5 py-1 rounded-md border border-border/80">
+                                <MapPin className="w-3.5 h-3.5 text-primary" /> {exp.location}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Metrics — Act 04 Proof Cards Treatment */}
+                      {exp.metrics && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                          {exp.metrics.map((metric, i) => (
+                            <div
+                              key={i}
+                              className="p-5 rounded-2xl bg-surface-raised/90 border border-primary/30 shadow-md hover:border-primary/50 transition-colors"
+                            >
+                              <div className="text-[10px] text-primary font-mono mb-1 font-bold tracking-wider uppercase">
+                                {metric.label}
+                              </div>
+                              <div className="text-3xl lg:text-4xl font-black text-text-primary font-headline tracking-tight">
+                                {metric.value}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-2.5 mb-6">
+                        {exp.tags.map((tag, i) => (
+                          <motion.span
+                            key={i}
+                            whileHover={{ scale: 1.08, y: -2 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+                            className="text-micro font-semibold text-text-secondary bg-surface-raised px-3.5 py-1.5 rounded-xl border border-border/80 hover:border-primary/50 hover:text-text-primary transition-all cursor-default"
+                          >
+                            {tag}
+                          </motion.span>
+                        ))}
+                      </div>
+
+                      {/* Achievements — Act 04 Engineering Proof Cards Treatment */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-8">
+                        {exp.achievements.map((achievement, i) => (
+                          <div
+                            key={i}
+                            className="p-4 rounded-xl bg-surface-raised/80 border border-border/80 hover:border-primary/40 transition-colors flex flex-col justify-start"
+                          >
+                            <div className="text-[10px] text-primary font-mono font-bold tracking-wider mb-2 flex items-center gap-1.5 uppercase">
+                              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                              DELIVERABLE 0{i + 1}
+                            </div>
+                            <div className="text-xs text-text-secondary leading-relaxed font-body">
+                              {achievement}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Certificate Footer */}
+                      <div className="pt-6 border-t border-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-primary" />
+                          <span className="text-xs text-text-secondary font-medium">
+                            Verified Internship Certificate · Outstanding Performance
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <a
+                            href={exp.certificate.pdfUrl}
+                            download
+                            className="flex items-center gap-2 text-xs font-bold text-primary hover:text-primary-hover bg-primary/10 px-4 py-2.5 rounded-xl border border-primary/30 hover:border-primary active:scale-95 transition-all shadow-md"
+                          >
+                            <Download className="w-4 h-4" />
+                            Download PDF
+                          </a>
+                        </div>
+                      </div>
+                    </SpotlightCard>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+
+          {/* ═══ TIMELINE COMPLETION BADGE ═══ */}
+          <motion.div
+            style={{ opacity: useTransform(scrollYProgress, [0.8, 1], [0, 1]) }}
+            className="flex justify-center mt-12"
+          >
+            <div className="inline-flex items-center gap-4 px-8 py-4 bg-surface/90 border border-primary/40 rounded-2xl backdrop-blur-xl shadow-xl">
+              <div className="flex items-center gap-2 text-primary">
+                <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_#00D9C0]" />
+                <span className="text-xl font-headline font-black">6</span>
+              </div>
+              <div className="w-px h-8 bg-border/50" />
+              <div className="text-sm">
+                <div className="text-text-primary font-bold">Months Production Experience</div>
+                <div className="text-xs text-text-secondary">2 internships · 3 production systems shipped</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
