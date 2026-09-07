@@ -43,7 +43,7 @@ export default function About() {
   const wordYs = [w0y, w1y, w2y, w3y, w4y, w5y];
 
   return (
-    <section ref={sectionRef} className="pt-20 md:pt-32 pb-12 md:pb-16 px-6 bg-surface/30 relative overflow-hidden" id="about">
+    <section ref={sectionRef} className="pt-20 md:pt-32 pb-12 md:pb-16 px-4 sm:px-6 bg-surface/30 relative overflow-hidden" id="about">
       {/* Ambient Gradient */}
       <div className="absolute top-1/3 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[140px] pointer-events-none" />
 
@@ -74,7 +74,7 @@ export default function About() {
 
         {/* ═══ EDITORIAL STATEMENT — Scroll-Driven Word Reveal ═══ */}
         <div className="mb-16 md:mb-20">
-          <div className="flex flex-wrap justify-center gap-x-4 md:gap-x-6 gap-y-2 md:gap-y-3 max-w-4xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 md:gap-x-6 gap-y-1.5 sm:gap-y-2 md:gap-y-3 max-w-4xl mx-auto">
             {statementWords.map((word, i) => (
               <motion.span
                 key={`${word}-${i}`}
@@ -84,10 +84,10 @@ export default function About() {
                 }}
                 className={`font-headline font-black tracking-tight leading-none ${
                   word === 'EDGE.'
-                    ? 'text-5xl md:text-7xl lg:text-8xl text-primary'
+                    ? 'text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-primary'
                     : word === 'INTELLIGENT' || word === 'SYSTEMS'
-                      ? 'text-5xl md:text-7xl lg:text-8xl text-text-primary'
-                      : 'text-4xl md:text-6xl lg:text-7xl text-text-secondary'
+                      ? 'text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-text-primary'
+                      : 'text-2xl sm:text-4xl md:text-6xl lg:text-7xl text-text-secondary'
                 }`}
               >
                 {word}
@@ -100,9 +100,9 @@ export default function About() {
           {/* Left Column — Bio Storytelling */}
           <div className="lg:col-span-3 space-y-6">
             <Reveal direction="up" delay={0.2}>
-              <div className="bg-surface/90 border border-border/80 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+              <div className="bg-surface/90 border border-border/80 rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden backdrop-blur-xl">
                 {/* Top Telemetry Header */}
-                <div className="flex items-center justify-between pb-4 mb-6 border-b border-border/70 text-micro font-mono">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-border/70 text-micro font-mono">
                   <span className="text-primary font-bold flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-primary" />
                     ENGINEERING PROFILE // P. RAHUL REDDY

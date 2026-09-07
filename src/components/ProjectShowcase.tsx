@@ -164,7 +164,7 @@ function ShowcaseContent({ progress }: { progress: MotionValue<number> }) {
   return (
     <div className="w-full max-w-5xl mx-auto px-4 sm:px-6">
       {/* ═══ MASTER CINEMATIC PRODUCT CHASSIS ═══ */}
-      <div className="relative rounded-3xl border border-primary/40 bg-surface/90 backdrop-blur-2xl p-6 md:p-10 shadow-[0_25px_80px_rgba(0,0,0,0.75)] overflow-hidden">
+      <div className="relative rounded-3xl border border-primary/40 bg-surface/90 backdrop-blur-2xl p-4 sm:p-6 md:p-10 shadow-[0_25px_80px_rgba(0,0,0,0.75)] overflow-hidden">
         {/* Chassis Top HUD & Story Tracker */}
         <div className="border-b border-border/80 pb-4 mb-6">
           <div className="flex flex-wrap items-center justify-between gap-3 text-micro font-mono">
@@ -181,7 +181,7 @@ function ShowcaseContent({ progress }: { progress: MotionValue<number> }) {
               <button
                 type="button"
                 onClick={handleSkipCinematic}
-                className="text-primary hover:text-primary-hover underline underline-offset-4 decoration-primary/40 hover:decoration-primary font-mono text-[11px] font-bold transition-colors cursor-pointer rounded px-2 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="text-primary hover:text-primary-hover underline underline-offset-4 decoration-primary/40 hover:decoration-primary font-mono text-[11px] font-bold transition-colors cursor-pointer rounded px-2.5 py-2 min-h-[44px] inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 title="Skip to final specification and deployment links"
               >
                 Skip cinematic intro ↓
@@ -329,31 +329,31 @@ function ShowcaseContent({ progress }: { progress: MotionValue<number> }) {
               </div>
 
               {/* 5 Spatially Connected Stages */}
-              <div className="space-y-2.5">
+              <div className="space-y-2 sm:space-y-2.5">
                 {pipelineStages.map((stage) => (
                   <motion.div
                     key={stage.title}
                     style={{ opacity: stage.opacity, scale: stage.scale }}
-                    className="flex items-center justify-between gap-4 p-3.5 rounded-2xl bg-surface/90 border border-primary/30 transition-all shadow-lg"
+                    className="flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:p-3.5 rounded-2xl bg-surface/90 border border-primary/30 transition-all shadow-lg"
                   >
-                    <div className="flex items-center gap-3.5">
-                      <span className="text-xs font-mono font-bold text-primary/70 w-6 shrink-0">
+                    <div className="flex items-center gap-2 sm:gap-3.5 min-w-0">
+                      <span className="text-xs font-mono font-bold text-primary/70 w-5 sm:w-6 shrink-0">
                         {stage.num}
                       </span>
-                      <div className="p-2 rounded-xl bg-primary/15 text-primary shrink-0">
+                      <div className="p-1.5 sm:p-2 rounded-xl bg-primary/15 text-primary shrink-0">
                         {stage.icon}
                       </div>
-                      <div>
-                        <div className="text-sm font-bold font-headline text-text-primary">
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm font-bold font-headline text-text-primary truncate">
                           {stage.title}
                         </div>
-                        <div className="text-xs text-text-secondary hidden sm:block">
+                        <div className="text-xs text-text-secondary hidden sm:block truncate">
                           {stage.desc}
                         </div>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className="inline-block text-xs font-mono font-bold text-primary bg-primary/10 border border-primary/30 px-3 py-1 rounded-lg">
+                      <span className="inline-block text-[10px] sm:text-xs font-mono font-bold text-primary bg-primary/10 border border-primary/30 px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg whitespace-nowrap">
                         {stage.spec}
                       </span>
                     </div>
@@ -383,16 +383,16 @@ function ShowcaseContent({ progress }: { progress: MotionValue<number> }) {
                 Mitigating severe class imbalance without false positive degradation.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 text-left">
                 {/* 1. Corpus scale */}
                 <motion.div
                   style={{ opacity: proof1o }}
-                  className="p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
                 >
                   <div className="text-caption text-primary font-mono mb-1 font-bold">
                     CORPUS DATASET SCALE
                   </div>
-                  <div className="text-lg font-headline font-bold text-text-primary mb-1">
+                  <div className="text-base sm:text-lg font-headline font-bold text-text-primary mb-0.5 sm:mb-1">
                     17,880 Annotated Postings
                   </div>
                   <div className="text-xs text-text-secondary leading-relaxed">
@@ -403,12 +403,12 @@ function ShowcaseContent({ progress }: { progress: MotionValue<number> }) {
                 {/* 2. Severe Class Imbalance */}
                 <motion.div
                   style={{ opacity: proof2o }}
-                  className="p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
                 >
                   <div className="text-caption text-primary font-mono mb-1 font-bold">
                     POSITIVE CLASS SPARSITY
                   </div>
-                  <div className="text-lg font-headline font-bold text-text-primary mb-1">
+                  <div className="text-base sm:text-lg font-headline font-bold text-text-primary mb-0.5 sm:mb-1">
                     &lt;5% Fraud Class Imbalance
                   </div>
                   <div className="text-xs text-text-secondary leading-relaxed">
@@ -419,12 +419,12 @@ function ShowcaseContent({ progress }: { progress: MotionValue<number> }) {
                 {/* 3. SMOTE Rebalancing */}
                 <motion.div
                   style={{ opacity: proof3o }}
-                  className="p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
                 >
                   <div className="text-caption text-primary font-mono mb-1 font-bold">
                     SMOTE FEATURE REBALANCING
                   </div>
-                  <div className="text-lg font-headline font-bold text-text-primary mb-1">
+                  <div className="text-base sm:text-lg font-headline font-bold text-text-primary mb-0.5 sm:mb-1">
                     Normalized 5:95 → 50:50
                   </div>
                   <div className="text-xs text-text-secondary leading-relaxed">
@@ -435,12 +435,12 @@ function ShowcaseContent({ progress }: { progress: MotionValue<number> }) {
                 {/* 4. SVM & FastAPI Latency */}
                 <motion.div
                   style={{ opacity: proof4o }}
-                  className="p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
+                  className="p-3.5 sm:p-5 rounded-2xl bg-surface-raised/90 border border-border/80 shadow-md"
                 >
                   <div className="text-caption text-primary font-mono mb-1 font-bold">
                     SVM &amp; FASTAPI INFERENCE
                   </div>
-                  <div className="text-lg font-headline font-bold text-text-primary mb-1">
+                  <div className="text-base sm:text-lg font-headline font-bold text-text-primary mb-0.5 sm:mb-1">
                     &lt;12ms ASGI Serving Latency
                   </div>
                   <div className="text-xs text-text-secondary leading-relaxed">

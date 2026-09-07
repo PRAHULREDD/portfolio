@@ -161,7 +161,7 @@ export default function Skills() {
             <div className="inline-flex flex-wrap items-center justify-center gap-3 p-2 bg-surface/90 border border-border/90 rounded-2xl backdrop-blur-xl shadow-2xl">
               <button
                 onClick={() => setActiveLevelFilter(null)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 ${
+                className={`px-4 py-2.5 min-h-[44px] inline-flex items-center justify-center rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 ${
                   activeLevelFilter === null
                     ? 'bg-primary text-background shadow-lg shadow-primary/30'
                     : 'text-text-secondary hover:text-text-primary hover:bg-surface-raised'
@@ -171,7 +171,7 @@ export default function Skills() {
               </button>
               <button
                 onClick={() => setActiveLevelFilter(activeLevelFilter === 'expert' ? null : 'expert')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition-all duration-200 ${
                   activeLevelFilter === 'expert'
                     ? 'bg-primary text-background shadow-lg shadow-primary/30'
                     : 'text-text-secondary hover:text-primary hover:bg-surface-raised'
@@ -182,7 +182,7 @@ export default function Skills() {
               </button>
               <button
                 onClick={() => setActiveLevelFilter(activeLevelFilter === 'proficient' ? null : 'proficient')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition-all duration-200 ${
                   activeLevelFilter === 'proficient'
                     ? 'bg-primary/25 text-primary border border-primary'
                     : 'text-text-secondary hover:text-primary hover:bg-surface-raised'
@@ -193,7 +193,7 @@ export default function Skills() {
               </button>
               <button
                 onClick={() => setActiveLevelFilter(activeLevelFilter === 'familiar' ? null : 'familiar')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition-all duration-200 ${
                   activeLevelFilter === 'familiar'
                     ? 'bg-surface-raised text-text-primary border border-border'
                     : 'text-text-secondary hover:text-text-primary hover:bg-surface-raised'

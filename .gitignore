@@ -10,6 +10,7 @@ coverage/
 playwright-audit/
 playwright-report/
 test-results/
+*.cjs
 
 # Media & Large Demonstration Files
 demo.mp4

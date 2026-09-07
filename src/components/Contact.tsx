@@ -100,7 +100,7 @@ export default function Contact() {
                 href="mailto:rahulreddyp24@gmail.com"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="btn-primary text-xl px-12 py-5 rounded-full flex items-center justify-center gap-4 shadow-2xl shadow-primary/30 hover:shadow-[0_0_40px_#00D9C050] border border-primary/40 group transition-all relative overflow-hidden"
+                className="btn-primary text-base sm:text-lg md:text-xl px-6 sm:px-10 md:px-12 py-4 sm:py-5 rounded-full flex items-center justify-center gap-3 sm:gap-4 shadow-2xl shadow-primary/30 hover:shadow-[0_0_40px_#00D9C050] border border-primary/40 group transition-all relative overflow-hidden max-w-full"
               >
                 {/* Breathing glow pulse */}
                 <motion.div
@@ -108,8 +108,8 @@ export default function Contact() {
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                   className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 rounded-full pointer-events-none"
                 />
-                <Mail className="w-7 h-7 group-hover:scale-110 transition-transform relative z-10" />
-                <span className="font-extrabold tracking-tight relative z-10">rahulreddyp24@gmail.com</span>
+                <Mail className="w-5 h-5 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform relative z-10 shrink-0" />
+                <span className="font-extrabold tracking-tight relative z-10 truncate sm:overflow-visible">rahulreddyp24@gmail.com</span>
                 <motion.div
                   whileHover={{ x: 3, y: -3 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 15 }}

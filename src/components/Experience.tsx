@@ -153,7 +153,7 @@ export default function Experience() {
                     {/* Experience Card */}
                     <SpotlightCard className="border-border/90 hover:border-primary/50 transform-gpu transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,217,192,0.12)] shadow-2xl relative overflow-hidden">
                       {/* Top Track Telemetry Strip */}
-                      <div className="flex items-center justify-between pb-4 mb-6 border-b border-border/70 text-micro font-mono">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-border/70 text-micro font-mono">
                         <span className="text-primary font-bold flex items-center gap-2">
                           <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                           TRACK // {index === 0 ? 'HEALTHCARE ML & DATA PIPELINES' : 'COMPUTER VISION & EDGE NPU SYSTEMS'}

@@ -166,9 +166,9 @@ export default function EducationCertifications() {
                       <a
                         href={cert.pdfUrl}
                         download
-                        className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1.5 bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/25 hover:border-primary transition-all group"
+                        className="text-xs font-semibold text-primary hover:text-primary-hover inline-flex items-center gap-1.5 bg-primary/10 px-3.5 py-2.5 rounded-lg border border-primary/25 hover:border-primary transition-all group min-h-[44px]"
                       >
-                        <Download className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" />
+                        <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
                         PDF
                       </a>
                       {cert.credentialId && (

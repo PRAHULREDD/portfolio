@@ -53,7 +53,7 @@ export default function Projects() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="group h-full"
             >
-              <SpotlightCard className="h-full flex flex-col justify-between border-primary/30 hover:border-primary/70 transform-gpu transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,217,192,0.18)] shadow-2xl relative overflow-hidden bg-gradient-to-b from-surface/95 to-background !p-7 md:!p-8">
+              <SpotlightCard className="h-full flex flex-col justify-between border-primary/30 hover:border-primary/70 transform-gpu transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,217,192,0.18)] shadow-2xl relative overflow-hidden bg-gradient-to-b from-surface/95 to-background !p-5 sm:!p-7 md:!p-8">
                   {/* Biometric HUD Reticle corner marks */}
                   <div className="absolute top-2.5 left-2.5 w-4 h-4 border-t-2 border-l-2 border-primary/70 pointer-events-none group-hover:border-primary group-hover:scale-110 transition-all duration-300" />
                   <div className="absolute top-2.5 right-2.5 w-4 h-4 border-t-2 border-r-2 border-primary/70 pointer-events-none group-hover:border-primary group-hover:scale-110 transition-all duration-300" />
@@ -62,9 +62,9 @@ export default function Projects() {
 
                   <div>
                     {/* Header bar */}
-                    <div className="flex items-center justify-between mb-5">
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
                       <div className="flex items-center gap-3">
-                        <span className="text-5xl font-black font-headline text-primary/40 font-mono">02</span>
+                        <span className="text-4xl sm:text-5xl font-black font-headline text-primary/40 font-mono">02</span>
                         <span className="inline-flex items-center gap-1.5 text-micro font-mono text-primary bg-primary/10 px-3 py-1 rounded-md border border-primary/30 font-bold uppercase tracking-wider">
                           <Scan className="w-3.5 h-3.5 animate-pulse" /> BIOMETRIC CV
                         </span>
@@ -81,7 +81,7 @@ export default function Projects() {
                     </div>
 
                     {/* ═══ BIOMETRIC HUD SCANNER CONSOLE ═══ */}
-                    <div className="mb-6 rounded-2xl border border-primary/40 bg-surface/95 backdrop-blur-xl p-5 md:p-6 shadow-xl relative overflow-hidden group/hud">
+                    <div className="mb-6 rounded-2xl border border-primary/40 bg-surface/95 backdrop-blur-xl p-4 sm:p-5 md:p-6 shadow-xl relative overflow-hidden group/hud">
                       {/* Scanning Laser Beam */}
                       <motion.div
                         animate={{ y: ['-100%', '300%'] }}
@@ -90,12 +90,12 @@ export default function Projects() {
                       />
 
                       {/* Top HUD Telemetry Bar */}
-                      <div className="flex items-center justify-between text-[10px] font-mono text-primary/70 mb-3 border-b border-primary/20 pb-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-primary/70 mb-3 border-b border-primary/20 pb-2">
                         <span className="flex items-center gap-1.5">
                           <Crosshair className="w-3 h-3 text-primary animate-spin" style={{ animationDuration: '8s' }} />
                           RANGE: 6.0 METERS
                         </span>
-                        <span>FOV: 68° // SCRFD ULTRA-LIGHT</span>
+                        <span>FOV: 68°<span className="hidden sm:inline"> // SCRFD ULTRA-LIGHT</span></span>
                         <span className="text-primary font-bold">MATCH: CONFIRMED</span>
                       </div>
 
@@ -211,7 +211,7 @@ export default function Projects() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="group h-full"
             >
-              <SpotlightCard className="h-full flex flex-col justify-between border-secondary/30 hover:border-secondary/70 transform-gpu transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,112,243,0.18)] shadow-2xl relative overflow-hidden bg-gradient-to-b from-surface/95 to-background !p-7 md:!p-8">
+              <SpotlightCard className="h-full flex flex-col justify-between border-secondary/30 hover:border-secondary/70 transform-gpu transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,112,243,0.18)] shadow-2xl relative overflow-hidden bg-gradient-to-b from-surface/95 to-background !p-5 sm:!p-7 md:!p-8">
                   {/* Silicon Chip Corner Pad Pins */}
                   <div className="absolute top-2.5 left-2.5 w-4 h-4 border-t-2 border-l-2 border-secondary/70 pointer-events-none group-hover:border-secondary group-hover:scale-110 transition-all duration-300" />
                   <div className="absolute top-2.5 right-2.5 w-4 h-4 border-t-2 border-r-2 border-secondary/70 pointer-events-none group-hover:border-secondary group-hover:scale-110 transition-all duration-300" />
@@ -220,9 +220,9 @@ export default function Projects() {
 
                   <div>
                     {/* Header bar */}
-                    <div className="flex items-center justify-between mb-5">
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
                       <div className="flex items-center gap-3">
-                        <span className="text-5xl font-black font-headline text-secondary/40 font-mono">03</span>
+                        <span className="text-4xl sm:text-5xl font-black font-headline text-secondary/40 font-mono">03</span>
                         <span className="inline-flex items-center gap-1.5 text-micro font-mono text-secondary bg-secondary/10 px-3 py-1 rounded-md border border-secondary/30 font-bold uppercase tracking-wider">
                           <CircuitBoard className="w-3.5 h-3.5 text-secondary animate-pulse" /> NPU SILICON
                         </span>
@@ -239,9 +239,9 @@ export default function Projects() {
                     </div>
 
                     {/* ═══ SILICON NPU HARDWARE CHIP CONSOLE ═══ */}
-                    <div className="mb-6 rounded-2xl border border-secondary/40 bg-surface/95 backdrop-blur-xl p-5 md:p-6 shadow-xl relative overflow-hidden group/chip">
+                    <div className="mb-6 rounded-2xl border border-secondary/40 bg-surface/95 backdrop-blur-xl p-4 sm:p-5 md:p-6 shadow-xl relative overflow-hidden group/chip">
                       {/* Top Hardware Telemetry */}
-                      <div className="flex items-center justify-between text-[10px] font-mono text-secondary/80 mb-3 border-b border-secondary/20 pb-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-secondary/80 mb-3 border-b border-secondary/20 pb-2">
                         <span className="flex items-center gap-1.5">
                           <Zap className="w-3 h-3 fill-secondary" />
                           HAILO-8L M.2 HAT

@@ -75,7 +75,7 @@ export default function Navbar({ onOpenResume }: { onOpenResume: () => void }) {
           }}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          className="font-headline text-xl font-bold text-primary tracking-tight flex items-center gap-2 group"
+          className="font-headline text-xl font-bold text-primary tracking-tight flex items-center gap-2 group py-2"
         >
           <span className="w-2 h-2 rounded-full bg-primary group-hover:scale-125 transition-transform" />
           <span className="bg-gradient-to-r from-text-primary via-text-primary to-primary bg-clip-text text-transparent">
@@ -127,7 +127,7 @@ export default function Navbar({ onOpenResume }: { onOpenResume: () => void }) {
         {/* Mobile Menu Button */}
         <motion.button
           whileTap={{ scale: 0.9 }}
-          className="md:hidden text-primary p-2 hover:bg-surface rounded-lg transition-colors border border-border/50"
+          className="md:hidden text-primary p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-surface rounded-lg transition-colors border border-border/50"
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? 'Close menu' : 'Open menu'}
         >
